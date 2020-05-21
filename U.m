@@ -283,6 +283,8 @@ EseguiIndividuo[individuo_] := Module[{result},
 	];
 
 
+
+(* Crossover *)
 TrueFalseIn = {xEQ, xNOT, xDU}; (* Per xEQ, xNOT, xDU *)
 lettereIn = {xEQ, xNOT, xDU, xMT, xMS}; (* Per sensori, xMT, xMS. xDU solo 1° arg*)
 
@@ -298,24 +300,20 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 			swap = temp[[ Random[Integer, {1, Length[temp] - 1}] ]];
 
 			If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
-
 				Pos = Position[ind2, xEQ | xNOT | xDU | xMT | xMS];
 				arg1o2 = {xEQ},
 
 				(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
 				Pos = Position[ind2, xEQ | xNOT | xDU];
 				arg1o2 = {xEQ, xDU};
-
 			];
 
 			pos = Pos[[ Random[Integer, {1, Length[Pos]}] ]];
 			pos[[-1]] = 0;
 
 			If [ MatchQ[ind2[[ Sequence @@ pos]], xEQ | xNOT | xDU ],
-
 				comp = TrueFalseIn,
 				comp = lettereIn;
-
 			];
 
 			If[ MemberQ[ arg1o2, ind2[[ Sequence @@ pos]] ],
@@ -327,13 +325,12 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 			pos1[[-1]] = 0;
 
 
+			(* Forse da risistemare! *)
 			crossoverOK = False;
 
 			If[ MemberQ[comp, ind1[[ Sequence @@ pos1]]] ,
 				If[ comp === lettereIn,
-
 					If[Not[MatchQ[ ind1[[ Sequence @@ pos1]], xDU ] ],
-
 						crossoverOK = True,
 
 						(* Qui abbiamo un DU, quindi controlliamo che *)
@@ -342,24 +339,18 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 							crossoverOK = True;
 						];				
 					],
-
 					(* qui comp = TrueFalseIn *)
 					crossoverOK = True;
 				];
-
 			];
 
 			If[crossoverOK === True,
 				ind1[[ Sequence @@ Position[ind1, swap][[1]] ]] = ind2[[ Sequence @@ pos ]];
 				ind2[[ Sequence @@ pos ]] = swap;
 			];
-
 		];
 
-		result = {ind1, ind2};
-	
-		result
-
+		result = {ind1, ind2}
 	];
 
 
@@ -380,10 +371,6 @@ run := Module[{lenstack, pop},
 		Print["stack finale = ", stack];
 		Print["table finale = ", table];
 	];
-
-
-
-
 
 
 
