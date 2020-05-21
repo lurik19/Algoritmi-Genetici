@@ -218,7 +218,8 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 
 				];
 
-		i];
+		];
+
 		
 		If[ MemberQ[individuo, arg, Infinity],
 			individuo = Individuo
@@ -251,9 +252,9 @@ Fitness[individuo_] := Module[{fitness, stackIniziale},
 
 		Print[index, " ", letterespostate, " ", contapassi, " ", loop];
 
-		(* AGGIUNGI per MS e MT: se stackin={} e stackfin={} allora non incrementano *)
+		(* AGGIUNGI PENALIZZARE LOOP *)
 
-		fitness = 6 * index + 2 * letterespostate + 0.5 * contapassi - 4 * loop;
+		fitness = 3 * index + 1 * letterespostate + 0.5 * contapassi - 2 * loop;
 
 		fitness
 
