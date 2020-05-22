@@ -133,10 +133,11 @@ DU[expr1_, expr2_] := Module[{contapassiDU},
 				];
 
 				If[ contapassiDU > 3*Length[goal],
-					loop = 1; (* se =1 vuol dire che c'è stato un loop *)
+					loop = 1; (* se = 1 vuol dire che c'è stato un loop *)
 				];
 
-				ReleaseHold[expr2] (* DU restituisce True se non "sfora" 3*N 							      passi, altrimenti restituisce Null*)
+				ReleaseHold[expr2] (* DU restituisce True se non "sfora" 3*N
+                                      passi, altrimenti restituisce Null *)
 
 			];
 
@@ -176,22 +177,20 @@ EQ[expr1_, expr2_] := Module[{result},
 
 
 
-(* ALGORITMO GENETICO *)
+(*********************************** ALGORITMO GENETICO ******************************)
 
 (* Costruzione di un individuo *)
 
+(* Liste di comandi necessarie per la generazione di un individuo *)
 comandi = {xEQ[arg, arg], xNOT[arg], xDU[arg, arg], xMT[arg], xMS[arg], xNN, xTB, xCS}; (*per EQ, NOT e 1° argomento di DU*)
-
 comandiTF = {xEQ[arg, arg], xNOT[arg], xDU[arg, arg]}; (* per 2° argomento di DU *)
-
 sensori = {xCS, xTB, xNN, xMT[arg], xMS[arg]}; (* per MS, MT*)
 
 
-(* individuo iniziale *)
-ii = Hold[xEQ[arg, arg]];
+ii = Hold[xEQ[arg, arg]]; (* individuo iniziale *)
 
 Individuo := Module[{Pos, pos, com, i, individuo},
-		
+
 		individuo = ii;
 
 		While[MemberQ[individuo, arg, Infinity] && Depth[individuo] <= 5,
@@ -201,7 +200,7 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 				pos = Pos[[i]];
 				pos[[-1]] = 0; (* In questo modo leggo la Head di arg *)
 
-				(* Da che lista di comandi estraiamo? *)
+				(* Decidiamo da che lista di comandi estraiamo *)
 				If[ MemberQ[{xEQ, xNOT}, Part[individuo, Sequence @@ pos]],
 					com = comandi,
 					If[ MemberQ[{xMS, xMT}, Part[individuo, Sequence @@ pos]],
@@ -220,7 +219,6 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 
 		];
 
-		
 		If[ MemberQ[individuo, arg, Infinity],
 			individuo = Individuo
 		];
@@ -230,8 +228,68 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 	];
 
 
+Individ[ind_] := Module[{Pos, pos, com, i, individuo},
+
+		individuo = ind;
+
+		While[ MemberQ[individuo, arg, Infinity] && Depth[individuo] <= 5 + Depth[ind],
+			Pos = Position[individuo, arg];
+
+			For[i=1, i <= Length[Pos], i++,
+				pos = Pos[[i]];
+				pos[[-1]] = 0; (* In questo modo leggo la Head di arg *)
+
+				(* Decidiamo da che lista di comandi estraiamo *)
+				If[ MemberQ[{xEQ, xNOT}, Part[individuo, Sequence @@ pos]],
+					com = comandi,
+					If[ MemberQ[{xMS, xMT}, Part[individuo, Sequence @@ pos]],
+						com = sensori,
+						(* Non rimane che il DU: 1° o 2° argomento? *)
+						If[Pos[[i]][[Length[Pos[[i]]]]] === 1,
+							com = comandi,
+							com = comandiTF;
+						];
+					];
+				];
+
+				individuo[[Sequence @@ Pos[[i]]]] = com[[Random[Integer, {1, Length[com]}]]];
+			];
+
+		];
+
+		If[ MemberQ[individuo, arg, Infinity],
+			individuo = Individ[ind];
+		];
+
+		individuo
+
+	];
+
+
+EseguiIndividuo[individuo_] := Module[{result},
+
+		result = individuo /. {xCS->Hold[CS], xTB->Hold[TB], xNN->Hold[NN], xNOT->NOT,
+                               xMT->MT, xMS->MS, xEQ->EQ, xDU->DU};
+
+		result = Map[ReleaseHold, result, {0, Infinity}];
+
+		result
+	];
+
+
+
+Popolazione[num_] := Module[{pop},
+
+		pop = Table[Individuo, {i, num}];
+
+		pop
+
+	];
+
+
+
 Fitness[individuo_] := Module[{fitness, stackIniziale},
-		
+
 		Print[individuo];
 
 		indexIniziale = Indice[stack, goal];
@@ -243,7 +301,6 @@ Fitness[individuo_] := Module[{fitness, stackIniziale},
 		Print[stack];
 
 		EseguiIndividuo[individuo];
-		
 
 
 		(* Criteri per la fitness *)
@@ -259,27 +316,6 @@ Fitness[individuo_] := Module[{fitness, stackIniziale},
 		fitness
 
 
-	];
-
-Popolazione[num_] := Module[{pop},
-
-		pop = Table[Individuo, {i, num}];
-
-		pop
-
-	];
-
-
-EseguiIndividuo[individuo_] := Module[{result},
-
-		result = individuo /. {xCS->Hold[CS], xTB->Hold[TB], xNN->Hold[NN], xNOT->NOT,
-				       xMT->MT, xMS->MS, xEQ->EQ, xDU->DU};
-
-		result = Map[ReleaseHold, result, {0, Infinity}];
-
-		Print[stack];
-
-		result
 	];
 
 
@@ -300,12 +336,15 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 			swap = temp[[ Random[Integer, {1, Length[temp] - 1}] ]];
 
 			If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
+
 				Pos = Position[ind2, xEQ | xNOT | xDU | xMT | xMS];
-				arg1o2 = {xEQ},
+				arg1o2 = {xEQ}, (* in questo caso swap può essere
+						   inserito solo nel primo arg di DU *)
 
 				(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
 				Pos = Position[ind2, xEQ | xNOT | xDU];
-				arg1o2 = {xEQ, xDU};
+				arg1o2 = {xEQ, xDU}; (* in questo caso swap può essere
+							inserito in entrambi gli arg di DU *)
 			];
 
 			pos = Pos[[ Random[Integer, {1, Length[Pos]}] ]];
@@ -324,26 +363,23 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 			pos1 = Position[ind1, swap][[1]]; (* PUNTO DEBOLE! POTREBBE FARE CASINI *)
 			pos1[[-1]] = 0;
 
+			(* Ora controllo che la correttezza sintattica di ind1 sia conservata
+ 			   dopo lo scambio. Se così non fosse allora otterrei crossoverOK = False
+			   e lo scambio non verrebbe effettuato. Un controllo a cui bisogna fare
+			   attenzione è il fatto che i comandi che restituiscono lettere non
+			   possono essere inseriti nel secondo elemento del DU. *)
 
-			(* Forse da risistemare! *)
-			crossoverOK = False;
+			If[ Not[MemberQ[comp, ind1[[ Sequence @@ pos1]]]] || comp === lettereIn &&
+			    MatchQ[ ind1[[ Sequence @@ pos1]], xDU ] &&
+			    Position[ind1, swap][[1]][[-1]] === 2,
 
-			If[ MemberQ[comp, ind1[[ Sequence @@ pos1]]] ,
-				If[ comp === lettereIn,
-					If[Not[MatchQ[ ind1[[ Sequence @@ pos1]], xDU ] ],
-						crossoverOK = True,
-
-						(* Qui abbiamo un DU, quindi controlliamo che *)
-						(* lo scambio avvenga solo nel primo argomento *)
-						If[ Position[ind1 ,swap][[1]][[-1]] === 1,
-							crossoverOK = True;
-						];				
-					],
-					(* qui comp = TrueFalseIn *)
-					crossoverOK = True;
-				];
+				crossoverOK = False,
+				crossoverOK = True;                
 			];
 
+
+			(* Se crossoverOK è True, si può fare lo scambio!
+			   Altrimenti ind1 e ind2 restano invariati *)
 			If[crossoverOK === True,
 				ind1[[ Sequence @@ Position[ind1, swap][[1]] ]] = ind2[[ Sequence @@ pos ]];
 				ind2[[ Sequence @@ pos ]] = swap;
@@ -352,6 +388,66 @@ Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, po
 
 		result = {ind1, ind2}
 	];
+
+
+Mutazione[ind_] := Module[{temp, swap, pos, com},
+
+		individuo = ind;
+		Print[individuo];
+		If[ Random[] < pm,
+
+
+			temp = Level[individuo, Infinity];
+			swap = temp[[ Random[Integer, {1, Length[temp] - 1}] ]];
+
+
+			pos = Position[individuo, swap][[1]]; (* PUNTO DEBOLE! POTREBBE FARE CASINI *)			
+			pos[[-1]] = 0; (* In questo modo leggo la Head swap *)
+
+			(* Decidiamo da che lista di comandi estraiamo *)
+			If[ MemberQ[{xEQ, xNOT}, Part[individuo, Sequence @@ pos]],
+				com = comandi,
+				If[ MemberQ[{xMS, xMT}, Part[individuo, Sequence @@ pos]],
+					com = sensori,
+					(* Non rimane che il DU: 1° o 2° argomento? *)
+					If[ Pos[[i]][[Length[Pos[[i]]]]] === 1,
+						com = comandi,
+						com = comandiTF;
+					];
+				];
+			];
+
+			pos = Position[individuo, swap][[1]];
+
+			individuo[[Sequence @@ pos]] = com[[Random[Integer, {1, Length[com]}]]];
+
+			Print["QUI?"];
+			individuo = Individ[individuo];
+			Print["QUA?"];
+		];
+			individuo
+	];
+
+
+(* PROBLEMA:
+
+In[4]:= Mutazione[Individuo]
+Hold[xEQ[xNN, xDU[xNOT[xTB], xNOT[xTB]]]]
+
+Part::pspec: Part specification i
+     is neither an integer nor a list of integers.
+
+Part::pspec: Part specification i
+     is neither an integer nor a list of integers.
+
+Out[4]= Hold[xEQ[xNN, xDU[xEQ[xMT[xCS], xTB], xNOT[xTB]]]]
+
+*)
+
+
+
+
+
 
 
 run := Module[{lenstack, pop},
@@ -410,8 +506,7 @@ DeleteCasesOnce[list_List, cases_List] := Module[{countq},
 	];
 
 
-(* ATTENZIONE! Da Mathematica 6.0 questo comando è implementato di default! Commentarlo se si sta usando una versione di Mathematica >= 6.0 *)
-
+(* ATTENZIONE! Da Mathematica 6.0 RandomSample è implementato di default! Commentarlo se si sta usando una versione di Mathematica >= 6.0 *)
 RandomSample[lis_List, num_] := Module[{len, selectfunc, ll, n, aa},
 	len = Length[lis];
         selectfunc[{ll_, n_}] := {Drop[ll, {aa = Random[Integer, {1, Length[ll]}], aa}], n - 1};
