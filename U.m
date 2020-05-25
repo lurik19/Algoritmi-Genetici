@@ -189,7 +189,7 @@ sensori = {xCS, xTB, xNN, xMT[arg], xMS[arg]}; (* per MS, MT*)
 
 ii = Hold[xEQ[arg, arg]]; (* individuo iniziale *)
 
-Individuo := Module[{Pos, pos, com, i, individuo},
+Individuo[] := Module[{Pos, pos, com, i, individuo},
 
 		individuo = ii;
 
@@ -220,7 +220,7 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 		];
 
 		If[ MemberQ[individuo, arg, Infinity],
-			individuo = Individuo
+			individuo = Individuo[]
 		];
 
 		individuo
@@ -228,11 +228,15 @@ Individuo := Module[{Pos, pos, com, i, individuo},
 	];
 
 
-Individ[ind_] := Module[{Pos, pos, com, i, individuo},
+(* Costruzione di un individuo a partire da un altro individuo già formato,
+   ma con un arg da qualche parte *)
+
+Individuo[ind_] := Module[{Pos, pos, com, i, individuo},
 
 		individuo = ind;
 
-		While[ MemberQ[individuo, arg, Infinity] && Depth[individuo] <= 5 + Depth[ind],
+		While[ MemberQ[individuo, arg, Infinity] && Depth[individuo] <= 3 + Depth[ind],
+			
 			Pos = Position[individuo, arg];
 
 			For[i=1, i <= Length[Pos], i++,
@@ -258,7 +262,7 @@ Individ[ind_] := Module[{Pos, pos, com, i, individuo},
 		];
 
 		If[ MemberQ[individuo, arg, Infinity],
-			individuo = Individ[ind];
+			individuo = Individuo[ind];
 		];
 
 		individuo
@@ -321,131 +325,105 @@ Fitness[individuo_] := Module[{fitness, stackIniziale},
 
 
 (* Crossover *)
-TrueFalseIn = {xEQ, xNOT, xDU}; (* Per xEQ, xNOT, xDU *)
-lettereIn = {xEQ, xNOT, xDU, xMT, xMS}; (* Per sensori, xMT, xMS. xDU solo 1° arg*)
 
+tutto = {xEQ, xNOT, xDU, xMT, xMS, xCS, xTB, xNN}; (* tutti i possibili comandi *)
 
-Crossover[coppia_] := Module[{ind1, ind2, temp, swap, Pos, arg1o2, pos, comp, pos1, crossoverOK, result},
+Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, pos1, Headswap, 			      blacklist, temp, Pos2, pos2, swappo, result},
 
 		ind1 = coppia[[1]];
 		ind2 = coppia[[2]];
 
 		If[Random[] < pc,
-			
-			temp = Level[ind1, Infinity];
-			swap = temp[[ Random[Integer, {1, Length[temp] - 1}] ]];
 
-			If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
+			temp1 = Flatten[Table[Position[ind1,tutto[[i]]], {i,1,Length[tutto]}], 1];
+			temp1 = ReplaceAll[temp1, {x___,0} -> {x} ];
+		
+			crossoverOK = False;
 
-				Pos = Position[ind2, xEQ | xNOT | xDU | xMT | xMS];
-				arg1o2 = {xEQ}, (* in questo caso swap può essere
-						   inserito solo nel primo arg di DU *)
+			While[ crossoverOK === False && Length[temp1] > 1,
 
-				(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
-				Pos = Position[ind2, xEQ | xNOT | xDU];
-				arg1o2 = {xEQ, xDU}; (* in questo caso swap può essere
-							inserito in entrambi gli arg di DU *)
+				Rand = Random[Integer, {2, Length[temp1]}];
+				Pos1 = temp1[[ Rand ]];
+				temp1 = Delete[temp1, Rand];
+
+				swap = ind1[[ Sequence @@ Pos1 ]];
+
+				pos1 = Pos1;
+				pos1[[-1]] = 0;
+				Headswap = ind1[[ Sequence @@ pos1 ]];
+
+				Which[  MatchQ[Headswap, xNOT | xEQ], blacklist = {},
+					MatchQ[Headswap, xMT | xMS], blacklist = {xDU},
+					MatchQ[ Headswap, xDU], 
+						If[ Pos1[[-1]] === 1, 
+							blacklist = {},
+							blacklist = {xMS, xMT};
+						];
+				];
+
+				If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
+					blacklist = Union[Join[blacklist, {xDU}]],
+					(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
+					blacklist = Union[Join[blacklist, {xMS, xMT}]];
+				];
+
+				temp = Flatten[Table[Position[ind2, tutto[[i]]], {i,1,Length[tutto]}], 1];
+				temp = ReplaceAll[temp, {x___,0} -> {x} ];
+
+
+				While[ crossoverOK === False && Length[temp] > 1,
+				
+					Rand = Random[Integer, {2, Length[temp]}];
+					Pos2 = temp[[ Rand ]];
+					temp = Delete[temp, Rand];
+
+
+					pos2 = Pos2;
+					pos2[[-1]] = 0;
+
+
+					swappo = ind2[[ Sequence @@ pos2]];
+
+					If[ Not[ MemberQ[blacklist, swappo] ],
+						crossoverOK = True,
+						If[ MatchQ[ swappo, xDU ] && Pos2[[-1]] === 1,
+							crossoverOK = True;
+						];
+					];
+				];
 			];
 
-			pos = Pos[[ Random[Integer, {1, Length[Pos]}] ]];
-			pos[[-1]] = 0;
-
-			If [ MatchQ[ind2[[ Sequence @@ pos]], xEQ | xNOT | xDU ],
-				comp = TrueFalseIn,
-				comp = lettereIn;
-			];
-
-			If[ MemberQ[ arg1o2, ind2[[ Sequence @@ pos]] ],
-				pos[[-1]] = Random[Integer, {1, 2}],
-				pos[[-1]] = 1;
-			];
-
-			pos1 = Position[ind1, swap][[1]]; (* PUNTO DEBOLE! POTREBBE FARE CASINI *)
-			pos1[[-1]] = 0;
-
-			(* Ora controllo che la correttezza sintattica di ind1 sia conservata
- 			   dopo lo scambio. Se così non fosse allora otterrei crossoverOK = False
-			   e lo scambio non verrebbe effettuato. Un controllo a cui bisogna fare
-			   attenzione è il fatto che i comandi che restituiscono lettere non
-			   possono essere inseriti nel secondo elemento del DU. *)
-
-			If[ Not[MemberQ[comp, ind1[[ Sequence @@ pos1]]]] || comp === lettereIn &&
-			    MatchQ[ ind1[[ Sequence @@ pos1]], xDU ] &&
-			    Position[ind1, swap][[1]][[-1]] === 2,
-
-				crossoverOK = False,
-				crossoverOK = True;                
-			];
-
-
-			(* Se crossoverOK è True, si può fare lo scambio!
-			   Altrimenti ind1 e ind2 restano invariati *)
 			If[crossoverOK === True,
-				ind1[[ Sequence @@ Position[ind1, swap][[1]] ]] = ind2[[ Sequence @@ pos ]];
-				ind2[[ Sequence @@ pos ]] = swap;
+				ind1[[ Sequence @@ Pos1 ]] = ind2[[ Sequence @@ Pos2 ]];
+				ind2[[ Sequence @@ Pos2 ]] = swap;
 			];
+	
 		];
 
 		result = {ind1, ind2}
 	];
 
 
-Mutazione[ind_] := Module[{temp, swap, pos, com},
+Mutazione[ind_] := Module[{individuo, temp, Pos},
 
 		individuo = ind;
-		Print[individuo];
+
 		If[ Random[] < pm,
 
+			temp = Flatten[Table[Position[individuo, tutto[[i]]],
+					     {i,1,Length[tutto]}], 1];
+			temp = ReplaceAll[temp, {x___,0} -> {x} ];
 
-			temp = Level[individuo, Infinity];
-			swap = temp[[ Random[Integer, {1, Length[temp] - 1}] ]];
+			Pos = temp[[ Random[Integer, {2, Length[temp]}] ]];
 
+			individuo[[ Sequence @@ Pos ]] = arg;
 
-			pos = Position[individuo, swap][[1]]; (* PUNTO DEBOLE! POTREBBE FARE CASINI *)			
-			pos[[-1]] = 0; (* In questo modo leggo la Head swap *)
+			individuo = Individuo[individuo];
 
-			(* Decidiamo da che lista di comandi estraiamo *)
-			If[ MemberQ[{xEQ, xNOT}, Part[individuo, Sequence @@ pos]],
-				com = comandi,
-				If[ MemberQ[{xMS, xMT}, Part[individuo, Sequence @@ pos]],
-					com = sensori,
-					(* Non rimane che il DU: 1° o 2° argomento? *)
-					If[ Pos[[i]][[Length[Pos[[i]]]]] === 1,
-						com = comandi,
-						com = comandiTF;
-					];
-				];
-			];
-
-			pos = Position[individuo, swap][[1]];
-
-			individuo[[Sequence @@ pos]] = com[[Random[Integer, {1, Length[com]}]]];
-
-			Print["QUI?"];
-			individuo = Individ[individuo];
-			Print["QUA?"];
 		];
+
 			individuo
 	];
-
-
-(* PROBLEMA:
-
-In[4]:= Mutazione[Individuo]
-Hold[xEQ[xNN, xDU[xNOT[xTB], xNOT[xTB]]]]
-
-Part::pspec: Part specification i
-     is neither an integer nor a list of integers.
-
-Part::pspec: Part specification i
-     is neither an integer nor a list of integers.
-
-Out[4]= Hold[xEQ[xNN, xDU[xEQ[xMT[xCS], xTB], xNOT[xTB]]]]
-
-*)
-
-
-
 
 
 
