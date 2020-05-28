@@ -381,7 +381,7 @@ suddivido[voti_, criterio_] := Module[{temp},
 
 tutto = {xEQ, xNOT, xDU, xMT, xMS, xCS, xTB, xNN}; (* tutti i possibili comandi *)
 	
-Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, pos1, Headswap, blacklistHead, temp, togliHead, blacklist, togli, Pos2, result},
+Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, pos1, Headswap, blacklistHead, temp, togliHead, togli, Pos2, result},
 
 		ind1 = coppia[[1]];
 		ind2 = coppia[[2]];
@@ -389,7 +389,7 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 		If[Random[] < pc,
 
 			temp1 = Flatten[Table[Position[ind1, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
-			temp1 = DeleteCases[ temp1, {1}]; (* Non può pescare tutto l'individuo (magari lo toglierò questo comando)*)		
+			temp1 = DeleteCases[ temp1, {1}]; (* Non può pescare tutto l'individuo (magari toglierò questo comando)*)		
 			crossoverOK = False;
 
 			While[ crossoverOK === False && Length[temp1] > 0,
@@ -404,7 +404,7 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 				pos1[[-1]] = 0;
 				Headswap = ind1[[ Sequence @@ pos1 ]];
 
-				Which[  MatchQ[Headswap, xNOT | xEQ], blacklistHead = {},
+				Which[ MatchQ[Headswap, xNOT | xEQ], blacklistHead = {},
 					MatchQ[Headswap, xMT | xMS], blacklistHead = {xDU, xNOT, xEQ},
 					MatchQ[ Headswap, xDU], 
 						If[ Pos1[[-1]] === 1, 
@@ -416,21 +416,16 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 				(* Qui butto via i pezzi di programma non compatibili *)
 				(* DA OTTIMIZZARE *)
 				temp = Flatten[Table[Position[ind2, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
+				temp = DeleteCases[ temp, {1}]; (* Non può pescare tutto l'individuo (magari toglierò questo comando)*)
+				
 				togliHead = Flatten[Table[Position[ind2, blacklistHead[[i]]], {i,1,Length[blacklistHead]}], 1] /. {x___,0}->{x};
 				temp = DeleteCases[ temp, Alternatives @@ togliHead]; 
 
 				If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
-					blacklist = {xDU},
+					temp = DeleteCases[temp, Alternatives @@ Position[ind2, xDU] /. {x___,0}->{x,2}];
 					(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
-					blacklist = {xMS, xMT};
+					temp = DeleteCases[temp, Alternatives @@ Position[ind2, xMS | xMT] /. {x___,0}->{x,1}];
 				];
-
-				If[blacklist === {xDU},
-					togli = Flatten[Table[Position[ind2, blacklist[[i]]], {i,1,Length[blacklist]}], 1] /. {x___,0}->{x,2},
-					togli = Flatten[Table[Position[ind2, blacklist[[i]]], {i,1,Length[blacklist]}], 1] /. {x___,0}->{x,1};
-				];
-				temp = DeleteCases[ temp, Alternatives @@ togli];
-				temp = DeleteCases[ temp, {1}]; (* Non può pescare tutto l'individuo (magari lo toglierò questo comando)*)
 				(* Fine di: butto via i pezzi di programma non compatibili *)
 				
 				If[ Length[temp] > 0,
