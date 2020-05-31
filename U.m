@@ -6,19 +6,12 @@ pm = 0.05; (* probabilità di avere una mutazione *)
 (* Parola desiderata *)
 goal = {u, n, i, v, e, r, s, a, l, e};
 
-
 stack = {n, s};
 table = {v, u, i, l, e, a, e, r};
 
-
-
-test = EQ[DU[MT[CS], NOT[CS]], DU[MS[NN], NOT[NN]]];
-test1 = Hold[xEQ[xDU[xMT[xCS], xNOT[xCS]], xDU[xMS[xNN], xNOT[xNN]]]];
-
-
-
 (* contapassi *)
 contapassi = 0;
+spostaLettere = 0;
 contapassiMS = 0;
 contapassiMT = 0;
 
@@ -35,45 +28,45 @@ CS := Module[{result},
 			result = "Null"
 		];
 
-	result
+		result
 
 	];
 
 
 TB := Module[ {index, result},
 
-			contapassi += 1;
-			index = Indice[stack, goal];
+		contapassi += 1;
+		index = Indice[stack, goal];
 
-			If[ index === 0,
+		If[ index === 0,
 
-				result = "Null",
+			result = "Null",
 
-				result = goal[[index]];
+			result = goal[[index]];
 
-			];		
+		];		
 
-			result
+		result
 
-		];
+	];
 
 
 NN := Module[ {index, result},
 
-			contapassi += 1;
-			index = Indice[stack, goal];
+		contapassi += 1;
+		index = Indice[stack, goal];
 
-			If[ index === Length[goal],
-	
-				result = "Null",
+		If[ index === Length[goal],
 
-				result = goal[[ index + 1 ]];
+			result = "Null",
 
-			];
-
-			result
+			result = goal[[ index + 1 ]];
 
 		];
+
+		result
+
+	];
 
 
 (* Operazioni *)
@@ -82,40 +75,42 @@ NN := Module[ {index, result},
 
 MS[block_] := Module[{result},
 
-				contapassi += 1;
+		contapassi += 1;
 
-				If[ MemberQ[table, block],
-					contapassiMS += 1;
-					AppendTo[stack, block];
-					table = Delete[table, Position[table, block][[1]]];
-					result = block,
+		If[ MemberQ[table, block],
+			spostaLettere += 1;
+			contapassiMS += 1;
+			AppendTo[stack, block];
+			table = Delete[table, Position[table, block][[1]]];
+			result = block,
 
-					result = "Null";
+			result = "Null";
 
-				];
+		];
 
-				result
+		result
 
-			];
+	];
 
 
 MT[block_] := Module[{result},
 
-			contapassi += 1;
+		contapassi += 1;
 
-			If[ MemberQ[stack, block],
-				contapassiMT += 1;
-				table = Append[ table, stack[[-1]] ];
-				stack = Delete[ stack, -1 ];
-				result = block,
+		If[ MemberQ[stack, block],
+			spostaLettere += 1;
+			contapassiMT += 1;
+			table = Append[ table, stack[[-1]] ];
+			stack = Delete[ stack, -1 ];
+			result = block,
 
-				result = "Null"
+			result = "Null"
 
-			];
+		];
 
 		result
 
-		];
+	];
 
 
 (* Operazioni logiche *)
@@ -124,56 +119,56 @@ SetAttributes[DU, HoldAll];
 
 DU[expr1_, expr2_] := Module[{contapassiDU},
 
-				contapassi += 1;
-				contapassiDU = 0;
+		contapassi += 1;
+		contapassiDU = 0;
 
-				While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal],
-					ReleaseHold[expr1];
-					contapassiDU += 1;
-				];
+		While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal],
+			ReleaseHold[expr1];
+			contapassiDU += 1;
+		];
 
-				If[ contapassiDU > 3*Length[goal],
-					loop = 1; (* se = 1 vuol dire che c'è stato un loop *)
-				];
+		If[ contapassiDU > 3*Length[goal],
+			loop = 1; (* se = 1 vuol dire che c'è stato un loop *)
+		];
 
-				ReleaseHold[expr2] (* DU restituisce True se non "sfora" 3*N
-                                      passi, altrimenti restituisce Null *)
+		ReleaseHold[expr2] (* DU restituisce True se non "sfora" 3*N
+                              passi, altrimenti restituisce Null *)
 
-			];
+	];
 
 
 NOT[expr1_] := Module[{result},
 
-			contapassi += 1;
+		contapassi += 1;
 
-			If[ expr1 === "Null",
+		If[ expr1 === "Null",
 
-				result = True,
+			result = True,
 
-				result = "Null"
+			result = "Null"
 
-			];
+		];
 
 		result
 
-		];
+	];
 
 
 EQ[expr1_, expr2_] := Module[{result},
 
-				contapassi += 1;
-			
-				If[ expr1 === expr2,
+		contapassi += 1;
 
-					result = True,
+		If[ expr1 === expr2,
 
-					result = "Null"
+			result = True,
 
-				];
+			result = "Null"
 
-			result
+		];
 
-			];
+		result
+
+	];
 
 
 
@@ -291,7 +286,7 @@ Popolazione[num_] := Module[{pop},
 	];
 
 
-
+(*
 Fitness[individuo_] := Module[{fitness, stackIniziale},
 
 		stackIniziale = stack;
@@ -342,39 +337,112 @@ Fitness[individuo_] := Module[{fitness, stackIniziale},
 		fitness
 
 	];
+*)
+
+soluzioni = {};
+
+Fitness[individuo_] := Module[{fitness, stackIniziale},
+
+		(* Inizializzo le variabili per calcolare la fitness *)
+		stackIniziale = stack;
+		tableIniziale = table;
+		indexIniziale = Indice[stack, goal];
+		
+		contapassi = 0;
+		spostaLettere = 0;
+		contapassiMS = 0;
+		contapassiMT = 0;
+		loop = 0;
+		fitness = 0;
+
+		(*Print["stack iniziale = ", stack];*)
+
+		(* Eseguo effettivamente l'individuo (ovvero rimuovo le x e gli Hold) *)
+		EseguiIndividuo[individuo];
+
+		(* -------------------- Criteri per la fitness -------------------- *)
+
+
+		If[ Depth[individuo] > 10,
+			(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
+			   ma non lo butto. Altrimenti avrei individui molto profondi e specifici per
+			   risolvere il problema. Questi probabilmente dipenderebbero molto da una
+			   specifica stack! *)
+			fitness = 100,
+			
+			(* 1) conto quante lettere giuste ho in stack *)
+			(* index = Indice[stack, goal] - indexIniziale; *)
+			index = Indice[stack, goal];
+			fitness += 2000 * index;
+			
+			(* Se troviamo la parola esatta diamo un boost ulteriore *)
+			If[ index === Length[goal],
+				fitness += 5000;
+				AppendTo[soluzioni, individuo];
+			];
+			
+			(* 2) conto quante lettere vengono effettivamente spostate tra stack e table *)
+			spostaLettere = contapassiMS + 2 * contapassiMT;
+			fitness += 100 * spostaLettere;
+
+			(* 3) se un DU NON va in loop l'individuo avrà un boost nella fitness *)
+			If[ loop === 0,
+				fitness += 1000;
+			];
+		
+		
+		];
+		
+		If[ fitness > fitnessmax,
+			fitnessmax = fitness;
+			imax = ipop;
+		];
+		
+		(*Print[individuo];*)
+		(*Print["stack = ", stack, "Fitness = ", fitness];*)
+		If[ipop < Npop,
+			stack = stackIniziale;
+			table = tableIniziale,
+			EseguiIndividuo[pop[[imax]]];
+		];
+			
+		ipop++;
+		fitness
+
+	];
 
 voti[popolazione_] := Map[Fitness, popolazione];
 
 generazione[popolazione_] := Module[{temp, r},
 				
-				votipop = voti[popolazione];
+		votipop = voti[popolazione];
 
-				intervallo = suddivido[votipop, FitnessProportionate];
-				genitori = Table[
-						r = Random[];
-						indice = Count[intervallo, x_ /; x<r] + 1; 
-						popolazione[[indice]],
-						{i,1,Npop}
-					];
-
-				figli = ricombina[genitori];
-				
-				figli
+		intervallo = suddivido[votipop, FitnessProportionate];
+		genitori = Table[
+				r = Random[];
+				indice = Count[intervallo, x_ /; x<r] + 1; 
+				popolazione[[indice]],
+				{i,1,Npop}
 			];
 
+		figli = ricombina[genitori];
+		
+		figli
+	];
+
 suddivido[voti_, criterio_] := Module[{temp},
-					Which[criterio === FitnessProportionate,
-						totalevoti = Plus @@ voti;
-						frazioni = voti/totalevoti;
-						suddivisione = Table[Sum[frazioni[[j]], {j,1,i}] , {i,1,Npop}], 
-						True, (* caso di default *)
-						Print["criterio non definito"]; Abort[]
-				
-					];
+		Which[criterio === FitnessProportionate,
+			totalevoti = Plus @@ voti;
+			frazioni = voti/totalevoti;
+			suddivisione = Table[Sum[frazioni[[j]], {j,1,i}] , {i,1,Npop}], 
+			True, (* caso di default *)
+			Print["criterio non definito"]; Abort[]
+	
+		];
 
-				suddivisione
+		suddivisione
 
-				];
+	];
 
 
 (* Crossover *)
@@ -402,32 +470,34 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 
 				pos1 = Pos1;
 				pos1[[-1]] = 0;
+				(* Headswap è il comando che prende in input swap *)
 				Headswap = ind1[[ Sequence @@ pos1 ]];
 
 				Which[ MatchQ[Headswap, xNOT | xEQ], blacklistHead = {},
-					MatchQ[Headswap, xMT | xMS], blacklistHead = {xDU, xNOT, xEQ},
-					MatchQ[ Headswap, xDU], 
-						If[ Pos1[[-1]] === 1, 
-							blacklistHead = {},
-							blacklistHead = {xMS, xMT, xNN, xCS, xTB};
-						];
+					   MatchQ[Headswap, xMT | xMS], blacklistHead = {xDU, xNOT, xEQ, xMS, xMT},
+					   MatchQ[ Headswap, xDU], 
+							If[ Pos1[[-1]] === 1, 
+								blacklistHead = {},
+								blacklistHead = {xMS, xMT, xNN, xCS, xTB};
+							];
 				];
 				
 				(* Qui butto via i pezzi di programma non compatibili *)
 				(* DA OTTIMIZZARE *)
 				temp = Flatten[Table[Position[ind2, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
+				
 				temp = DeleteCases[ temp, {1}]; (* Non può pescare tutto l'individuo (magari toglierò questo comando)*)
 				
 				togliHead = Flatten[Table[Position[ind2, blacklistHead[[i]]], {i,1,Length[blacklistHead]}], 1] /. {x___,0}->{x};
 				temp = DeleteCases[ temp, Alternatives @@ togliHead]; 
-
-				If[ MatchQ[ Head[swap], Symbol | xMT | xMS ],
-					temp = DeleteCases[temp, Alternatives @@ Position[ind2, xDU] /. {x___,0}->{x,2}];
+				
+				If[ MatchQ[ Head[swap], Symbol],
+					temp = DeleteCases[temp, Alternatives @@ Position[ind2, xDU] /. {x___,0}->{x,2}],
 					(* If MatchQ[ Head[swap], xEQ | xNOT | xDU ] *)
 					temp = DeleteCases[temp, Alternatives @@ Position[ind2, xMS | xMT] /. {x___,0}->{x,1}];
 				];
 				(* Fine di: butto via i pezzi di programma non compatibili *)
-				
+
 				If[ Length[temp] > 0,
 					Pos2 = temp[[ Random[Integer, {1, Length[temp]}] ]];
 					crossoverOK = True;
@@ -444,16 +514,6 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 		result = {ind1, ind2}
 	];
 
-ricombina[popolazione_] := Module[{temp},
-				temp = Partition[popolazione,2];
-				figli = Map[Crossover, temp];
-				figli = Flatten[figli, 1];
-				figli = Map[Mutazione, figli];
-				
-				figli
-
-			];
-
 
 Mutazione[ind_] := Module[{individuo, temp, Pos},
 
@@ -461,10 +521,9 @@ Mutazione[ind_] := Module[{individuo, temp, Pos},
 
 		If[ Random[] < pm,
 
-			temp = Flatten[Table[Position[individuo, tutto[[i]]],
-					     {i,1,Length[tutto]}], 1];
+			temp = Flatten[Table[Position[individuo, tutto[[i]]], {i,1,Length[tutto]}], 1];
 			temp = ReplaceAll[temp, {x___,0} -> {x} ];
-
+			
 			Pos = temp[[ Random[Integer, {2, Length[temp]}] ]];
 
 			individuo[[ Sequence @@ Pos ]] = arg;
@@ -477,8 +536,43 @@ Mutazione[ind_] := Module[{individuo, temp, Pos},
 	];
 
 
+ricombina[popolazione_] := Module[{temp},
+		temp = Partition[popolazione,2];
+		figli = Map[Crossover, temp];
+		figli = Flatten[figli, 1];
+		figli = Map[Mutazione, figli];
+		
+		figli
 
-run := Module[{lenstack, temp, i},
+	];
+
+
+run := Module[{temp, igen},
+
+		soluzioni = {};
+
+		stackRandom;
+		
+		pop = Popolazione[Npop]; (* pop è una nuova popolazione ogni volta che lancio run *)
+		
+		For[igen=0, igen<100, igen++,
+			Print["Generazione: ", igen+1];
+			
+			ipop = 1;
+			fitnessmax = 0;
+			
+			pop = generazione[pop];
+			Print[stack];
+			
+			If[Length[soluzioni] != 0,
+				Print["Individuo trovato alla generazione ", igen+1];
+				Break[];
+			];
+		];
+
+	];
+
+stackRandom := Module[{lenstack},
 
 	(* Genero la condizione iniziale in modo casuale estraendo lettere da goal *)
 	lenstack = Random[Integer, {0, Length[goal]}];
@@ -486,50 +580,34 @@ run := Module[{lenstack, temp, i},
 	Print["stack iniziale = ", stack];
 	table = DeleteCasesOnce[goal, stack];
 	Print["table iniziale = ", table];
-	
-	pop = Popolazione[Npop]; (* pop è una nuova popolazione ogni volta che lancio run *)
-	trovata = 0;
-	For[i=0, i<100, i++,
-		Print[i];
-		pop = generazione[pop];
 
-		
-		(*If[trovata === 1;
-			Print["Individuo trovatto alla generazione ", i+1];
-			Break[];
-		];*)
-	];
-
-	];
-
-
+];
 
 (* Funzioni aggiuntive *)
 
 (* La funzione Indice mi dice fino a che posizione due parole sono uguali *)
 Indice[stack_, goal_] := Module[ {i, result},
 
-				i = 1;
+		i = 1;
 
-				For[i=1, i <= Length[stack], i++,
-					
-					If[ stack[[i]] === goal[[i]],
-										
-						result = i,
-
-						result = i - 1;
-						i = Length[stack] + 1;
-					];
-					
-				];
+		For[i=1, i <= Length[stack], i++,
 			
-				If[ Length[stack] === 0,
-					result = 0;
-				];
-	
-				result
+			If[ stack[[i]] === goal[[i]],
+								
+				result = i,
 
+				result = i - 1;
+				i = Length[stack] + 1;
 			];
+			
+		];
+	
+		If[ Length[stack] === 0,
+			result = 0;
+		];
+
+		result
+	];
 
 
 DeleteCasesOnce[list_List, cases_List] := Module[{countq},
@@ -541,7 +619,7 @@ DeleteCasesOnce[list_List, cases_List] := Module[{countq},
 
 (* ATTENZIONE! Da Mathematica 6.0 RandomSample è implementato di default! Commentarlo se si sta usando una versione di Mathematica >= 6.0 *)
 RandomSample[lis_List, num_] := Module[{len, selectfunc, ll, n, aa},
-	len = Length[lis];
+		len = Length[lis];
         selectfunc[{ll_, n_}] := {Drop[ll, {aa = Random[Integer, {1, Length[ll]}], aa}], n - 1};
-	#[[ Ordering[Random[] & /@ #] ]] & @ Complement[lis, First[Nest[selectfunc[#] &, {lis, num}, num]]]
+		#[[ Ordering[Random[] & /@ #] ]] & @ Complement[lis, First[Nest[selectfunc[#] &, {lis, num}, num]]]
 	];
