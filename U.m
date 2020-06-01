@@ -1,7 +1,8 @@
 (* Parametri del problema *)
 Npop = 100; (* numero individui *)
+Ngen = 100; (* numero di generazioni *)
 pc = 0.7; (* probabilità di avere crossover *)
-pm = 0.05; (* probabilità di avere una mutazione *)
+pm = 0.1; (* probabilità di avere una mutazione *)
 
 (* Parola desiderata *)
 goal = {u, n, i, v, e, r, s, a, l, e};
@@ -12,8 +13,6 @@ table = {v, u, i, l, e, a, e, r};
 (* contapassi *)
 contapassi = 0;
 spostaLettere = 0;
-contapassiMS = 0;
-contapassiMT = 0;
 
 (* Sensori *)
 
@@ -79,7 +78,6 @@ MS[block_] := Module[{result},
 
 		If[ MemberQ[table, block],
 			spostaLettere += 1;
-			contapassiMS += 1;
 			AppendTo[stack, block];
 			table = Delete[table, Position[table, block][[1]]];
 			result = block,
@@ -99,7 +97,6 @@ MT[block_] := Module[{result},
 
 		If[ MemberQ[stack, block],
 			spostaLettere += 1;
-			contapassiMT += 1;
 			table = Append[ table, stack[[-1]] ];
 			stack = Delete[ stack, -1 ];
 			result = block,
@@ -120,11 +117,12 @@ SetAttributes[DU, HoldAll];
 DU[expr1_, expr2_] := Module[{contapassiDU},
 
 		contapassi += 1;
-		contapassiDU = 0;
+		contapassiDU = 0; 
 
-		While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal],
+		While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal] && contapassiDUtot <= 15 * Length[goal],
 			ReleaseHold[expr1];
 			contapassiDU += 1;
+			contapassiDUtot += 1;
 		];
 
 		If[ contapassiDU > 3*Length[goal],
@@ -271,7 +269,7 @@ EseguiIndividuo[individuo_] := Module[{result},
                                xMT->MT, xMS->MS, xEQ->EQ, xDU->DU};
 
 		result = Map[ReleaseHold, result, {0, Infinity}];
-
+		
 		result
 	];
 
@@ -286,137 +284,93 @@ Popolazione[num_] := Module[{pop},
 	];
 
 
-(*
-Fitness[individuo_] := Module[{fitness, stackIniziale},
+Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
 
-		stackIniziale = stack;
-		tableIniziale = table;
-		indexIniziale = Indice[stack, goal];
-		
-		contapassi = 0;
-		contapassiMS = 0;
-		contapassiMT = 0;
-		loop = 0;
+	index = {};
+	
+	Headz = Map[Head, Level[individuo, Infinity]];
 
-		(*Print[stack];*)
+	(* Premio la varietà di comandi negli individui *)
+	fitnesstot = 500 * Length[Union[Headz]] * Length[stacks];
 
-		EseguiIndividuo[individuo];
+	If[ Depth[individuo] > 10 || Count[Headz, xEQ] > 6 || Count[Headz, xNOT] > 6 || Count[Headz, xDU] > 3,
+		(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
+		   ma non lo butto. Altrimenti avrei individui molto profondi e specifici per
+		   risolvere il problema. Questi probabilmente dipenderebbero molto da una
+		   specifica stack! *)
+		   
+		fitnesstot = 100,
 
-		(* Criteri per la fitness *)
-		letterespostate = contapassiMS + contapassiMT; (* conta quante lettere vengono effettivamente spostate *)
-
-		If[contapassi > 10,
-			lungo = 0,
-			lungo = contapassi;		
-		];
-
-		(* index = Indice[stack, goal] - indexIniziale; *)
-		index = Indice[stack, goal]; (* conta quante lettere giuste ho *)
-
-		abbattimento = 0;
-		(*If[index === 0,
-			If[Length[stack] < Length[stackIniziale],
-				abbattimento = 1,
-				abbattimento = -1;
-			];
-		];*)
-
-		If[ index === 10,
+		For[istack = 1, istack <= Length[stacks], istack++,
+	
+			stack = stacks[[istack]];
+			table = tables[[istack]];
 			
-			trovata = 1,
-			trovata = 0;
-
-		];
-		Print[individuo];
-		Print[stack];
-		stack = stackIniziale;
-		table = tableIniziale;
-
-		fitness = 300 * trovata + 60 * index + 15 * letterespostate + 50*abbattimento + 30 * lungo - 15 * loop;
-
-		fitness
-
-	];
-*)
-
-soluzioni = {};
-
-Fitness[individuo_] := Module[{fitness, stackIniziale},
-
-		(* Inizializzo le variabili per calcolare la fitness *)
-		stackIniziale = stack;
-		tableIniziale = table;
-		indexIniziale = Indice[stack, goal];
-		
-		contapassi = 0;
-		spostaLettere = 0;
-		contapassiMS = 0;
-		contapassiMT = 0;
-		loop = 0;
-		fitness = 0;
-
-		(*Print["stack iniziale = ", stack];*)
-
-		(* Eseguo effettivamente l'individuo (ovvero rimuovo le x e gli Hold) *)
-		EseguiIndividuo[individuo];
-
-		(* -------------------- Criteri per la fitness -------------------- *)
-
-
-		If[ Depth[individuo] > 10,
-			(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
-			   ma non lo butto. Altrimenti avrei individui molto profondi e specifici per
-			   risolvere il problema. Questi probabilmente dipenderebbero molto da una
-			   specifica stack! *)
-			fitness = 100,
+			(* Inizializzo le variabili per calcolare la fitness *)			
+			contapassi = 0;
+			contapassiDUtot = 0;
+			spostaLettere = 0;
 			
+			fitness = 0;
+			
+			(* Eseguo effettivamente l'individuo (ovvero rimuovo le x e gli Hold) *)
+			EseguiIndividuo[individuo];
+
+			(* -------------------- Criteri per la fitness -------------------- *)
+				
 			(* 1) conto quante lettere giuste ho in stack *)
-			(* index = Indice[stack, goal] - indexIniziale; *)
-			index = Indice[stack, goal];
-			fitness += 2000 * index;
-			
+			AppendTo[index, Indice[stack, goal]];
+			fitness += 500 * index[[istack]];
+			(*
 			(* Se troviamo la parola esatta diamo un boost ulteriore *)
-			If[ index === Length[goal],
-				fitness += 5000;
-				AppendTo[soluzioni, individuo];
-			];
+			If[ Indice[stack, goal] === Length[goal],
+				fitness += 3000 * 10;
+			];*)
 			
 			(* 2) conto quante lettere vengono effettivamente spostate tra stack e table *)
-			spostaLettere = contapassiMS + 2 * contapassiMT;
-			fitness += 100 * spostaLettere;
-
-			(* 3) se un DU NON va in loop l'individuo avrà un boost nella fitness *)
-			If[ loop === 0,
-				fitness += 1000;
+			(* Limito spostaLettere a questo valore perchè fare più spostamenti di così
+			   vorrebbe dire continuare a spostare inutilmente blocchi da stack a table *)
+			(* TROPPO LIMITANTE? (Sembra che ho troppo in mente il risultato?) *)
+			If[ spostaLettere < 2 * Length[goal] + 1,
+				fitness += 100 * spostaLettere,
+				fitness = 100;
 			];
-		
+				
+			fitnesstot += fitness;
 		
 		];
 		
-		If[ fitness > fitnessmax,
-			fitnessmax = fitness;
+		indextot = Total[index];
+		(* In questo modo faccio sì che i programmi che costruiscono più stack contemporaneamente 
+		   alla stessa velocità vengano premiate più di quelle che costruiscono magari una sola
+		   stack specifica! *)
+		diff = Max[index] - Min[index];
+		fitnesstot += 2000 * indextot / (diff + 1);
+		
+		(* Se trovo il programma ideale esco da Fitness[...] e poi in run esco anche dalla run! *)
+		If[ indextot === Length[stacks] * Length[goal],
+			trovato = 1;
+			soluzione = individuo;
+			Return[];
+		];
+
+	];
+	
+	
+		If[ fitnesstot > fitnessmax,
+			fitnessmax = fitnesstot;
 			imax = ipop;
 		];
-		
-		(*Print[individuo];*)
-		(*Print["stack = ", stack, "Fitness = ", fitness];*)
-		If[ipop < Npop,
-			stack = stackIniziale;
-			table = tableIniziale,
-			EseguiIndividuo[pop[[imax]]];
-		];
-			
-		ipop++;
-		fitness
+
+		fitnesstot
 
 	];
 
 voti[popolazione_] := Map[Fitness, popolazione];
 
 generazione[popolazione_] := Module[{temp, r},
-				
-		votipop = voti[popolazione];
 
+		votipop = voti[popolazione];
 		intervallo = suddivido[votipop, FitnessProportionate];
 		genitori = Table[
 				r = Random[];
@@ -453,7 +407,7 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 
 		ind1 = coppia[[1]];
 		ind2 = coppia[[2]];
-
+		
 		If[Random[] < pc,
 
 			temp1 = Flatten[Table[Position[ind1, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
@@ -537,8 +491,11 @@ Mutazione[ind_] := Module[{individuo, temp, Pos},
 
 
 ricombina[popolazione_] := Module[{temp},
+
 		temp = Partition[popolazione,2];
+		
 		figli = Map[Crossover, temp];
+		
 		figli = Flatten[figli, 1];
 		figli = Map[Mutazione, figli];
 		
@@ -549,38 +506,70 @@ ricombina[popolazione_] := Module[{temp},
 
 run := Module[{temp, igen},
 
-		soluzioni = {};
-
-		stackRandom;
+		trovato = 0;
+		
+		StacksAndTables;
+		
+		soluzione = "Null";
 		
 		pop = Popolazione[Npop]; (* pop è una nuova popolazione ogni volta che lancio run *)
 		
-		For[igen=0, igen<100, igen++,
+		For[igen=0, igen<Ngen, igen++,
 			Print["Generazione: ", igen+1];
 			
 			ipop = 1;
 			fitnessmax = 0;
 			
 			pop = generazione[pop];
-			Print[stack];
+			Print["Fitness massima = ", N[fitnessmax], "\n"];
 			
-			If[Length[soluzioni] != 0,
+			If[ trovato === 1,
 				Print["Individuo trovato alla generazione ", igen+1];
 				Break[];
 			];
 		];
 
+		If[ igen === Ngen && trovato === 0,
+			Print["Non è stato trovato l'individuo ideale! :("];
+		];
+
 	];
 
-stackRandom := Module[{lenstack},
+stackRand := Module[{lenstack},
 
 	(* Genero la condizione iniziale in modo casuale estraendo lettere da goal *)
 	lenstack = Random[Integer, {0, Length[goal]}];
 	stack = RandomSample[goal, lenstack];
-	Print["stack iniziale = ", stack];
+	(*Print["stack iniziale = ", stack];*)
 	table = DeleteCasesOnce[goal, stack];
-	Print["table iniziale = ", table];
+	(*Print["table iniziale = ", table];*)
 
+];
+
+StacksAndTables := Module[{is},
+
+	(*stacks = {{}, {u,n,l}, {r, n, i, e, u, v, a, l, s}, {u}, {s, v, r, u, a}};
+	tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is,1,5}];*)
+	stacks = {};
+	tables = {};
+	For[is = 1, is <= 5, is++,
+		stackRand;	
+		AppendTo[stacks, stack];
+		AppendTo[tables, table];
+	];
+	Print["stacks = ", stacks];
+	Print["tables = ", tables];
+
+];
+
+Try := Module[{},
+
+	contapassiDUtot = 0;
+	stackRand;
+	Print["stack iniziale = ", stack];
+	EseguiIndividuo[soluzione];
+	Print["stack finale = ", stack];
+	
 ];
 
 (* Funzioni aggiuntive *)
