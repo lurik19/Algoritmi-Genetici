@@ -380,7 +380,6 @@ Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
 			(* 2) conto quante lettere vengono effettivamente spostate tra stack e table *)
 			(* Limito spostaLettere a questo valore perchè fare più spostamenti di così
 			   vorrebbe dire continuare a spostare inutilmente blocchi da stack a table *)
-			(* TROPPO LIMITANTE? (Sembra che ho troppo in mente il risultato?) *)
 			If[ spostaLettere < 2 * Length[goal] + 1,
 				fitness += 100 * spostaLettere,
 				fitness = 100;
@@ -456,7 +455,7 @@ generazione[popolazione_] := Module[{temp, r},
 ];
 
 
-run := Module[{temp, igen},
+run := Module[{temp, igen, itry},
 
 		StacksAndTables;
 		soluzione = "Null";
@@ -479,6 +478,21 @@ run := Module[{temp, igen},
 				Print["Individuo trovato alla generazione ", igen+1];
 				Break[];
 			];
+		];
+		
+		If[trovato === 1,
+			numTry = 10000;
+			Print["\n"];
+			Print["Provo la soluzione su ", numTry, " stack"];
+			countbad = 0;
+			For[itry=0, itry<numTry, itry++ 
+				stackRand;
+				EseguiIndividuo[soluzione];
+				If[Indice[stack, goal] != Length[goal],
+					countbad++;
+				];
+			];
+			Print["Numero di stack su cui la soluzione ha funzionato: ", numTry - countbad];	
 		];
 
 		If[ igen === Ngen && trovato === 0,
