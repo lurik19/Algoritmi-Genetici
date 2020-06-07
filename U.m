@@ -111,10 +111,6 @@ DU[expr1_, expr2_] := Module[{contapassiDU},
 		contapassiDUtot += 1;
 	];
 
-	If[ contapassiDU > 3*Length[goal],
-		loop = 1; (* se = 1 vuol dire che c'è stato un loop *)
-	];
-
 	ReleaseHold[expr2] (* DU restituisce True se non "sfora" 3*N passi, altrimenti restituisce Null *)
 
 ];
@@ -210,9 +206,8 @@ EseguiIndividuo[individuo_] := Module[{result},
 	result = individuo /. {xCS->Hold[CS], xTB->Hold[TB], xNN->Hold[NN], xNOT->NOT,
                            xMT->MT, xMS->MS, xEQ->EQ, xDU->DU};
 
-	result = Map[ReleaseHold, result, {0, Infinity}];
+	result = Map[ReleaseHold, result, {0, Infinity}]
 	
-	result
 ];
 
 
@@ -352,8 +347,7 @@ Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
 		   
 		fitnesstot = 100,
 
-		For[istack = 1, istack <= Length[stacks], istack++,
-	
+		Do[	
 			stack = stacks[[istack]];
 			table = tables[[istack]];
 			
@@ -385,8 +379,9 @@ Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
 				fitness = 100;
 			];
 				
-			fitnesstot += fitness;
-		
+			fitnesstot += fitness,
+			
+			{istack, Length[stacks]}
 		];
 		
 		indextot = Total[index];
@@ -457,49 +452,59 @@ generazione[popolazione_] := Module[{temp, r},
 
 run := Module[{temp, igen, itry},
 
-		StacksAndTables;
-		soluzione = "Null";
-		trovato = 0;
+	StacksAndTables[0];
+	soluzione = "Null";
+	trovato = 0;
+	
+	(* Genero una nuova popolazione ogni volta che lancio run *)
+	pop = Popolazione[Npop]; 
+	
+	Do[
+		Print["Generazione: ", igen];
 		
-		(* Genero una nuova popolazione ogni volta che lancio run *)
-		pop = Popolazione[Npop]; 
-		
-		
-		For[igen=0, igen<Ngen, igen++,
-			Print["Generazione: ", igen+1];
-			
-			ipop = 1;
-			fitnessmax = 0;
+		ipop = 1;
+		fitnessmax = 0;
 
-			pop = generazione[pop];
-			Print["Fitness massima = ", N[fitnessmax], "\n"];
-			
-			If[ trovato === 1,
-				Print["Individuo trovato alla generazione ", igen+1];
-				Break[];
-			];
-		];
+		pop = generazione[pop];
+		Print["Fitness massima = ", N[fitnessmax], "\n"];
 		
-		If[trovato === 1,
-			numTry = 10000;
-			Print["\n"];
-			Print["Provo la soluzione su ", numTry, " stack"];
-			countbad = 0;
-			For[itry=0, itry<numTry, itry++ 
-				stackRand;
-				EseguiIndividuo[soluzione];
-				If[Indice[stack, goal] != Length[goal],
-					countbad++;
-				];
-			];
-			Print["Numero di stack su cui la soluzione ha funzionato: ", numTry - countbad];	
-		];
-
-		If[ igen === Ngen && trovato === 0,
-			Print["Non è stato trovato l'individuo ideale! :("];
-		];
-
+		If[ trovato === 1,
+			Print["Individuo trovato alla generazione ", igen];
+			Break[];
+		],
+		
+		{igen, Ngen}
 	];
+	
+	If[trovato === 1,
+		numTry = 1000;
+		Print["\n"];
+		Print["Provo la soluzione su ", numTry, " stack"];
+		countbad = 0;
+		For[itry=0, itry<numTry, itry++ 
+			stackRand;
+			EseguiIndividuo[soluzione];
+			If[Indice[stack, goal] != Length[goal],
+				countbad++;
+			];
+		];
+		Print["Numero di stack su cui la soluzione ha funzionato: ", numTry - countbad],
+		
+		Print["Non è stato trovato l'individuo ideale! :("];
+	
+	];
+
+];
+
+runs := Module[{},
+
+	Do[
+	
+		Print[AbsoluteTiming[run][[1]]],
+	
+	{irun, 5}];
+
+];
 
 stackRand := Module[{lenstack},
 
@@ -510,20 +515,24 @@ stackRand := Module[{lenstack},
 
 ];
 
-StacksAndTables := Module[{is},
+StacksAndTables[rand_] := Module[{is},
 
-	(*stacks = {{}, {u,n,l}, {r, n, i, e, u, v, a, l, s}, {u}, {s, v, r, u, a}};
-	tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, 1, 5}];*)
+	If[ rand === 0,
+		
+		stacks = {{}, {u,n,l}, {r, n, i, e, u, v, a, l, s}, {u}, {s, v, r, u, a}};
+		tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, 1, 5}],
 	
-	stacks = {};
-	tables = {};
-	For[is = 1, is <= 5, is++,
-		stackRand;	
-		AppendTo[stacks, stack];
-		AppendTo[tables, table];
+		stacks = {};
+		tables = {};
+		For[is = 1, is <= 5, is++,
+			stackRand;	
+			AppendTo[stacks, stack];
+			AppendTo[tables, table];
+		];
+		
 	];
+	
 	Print["stacks = ", stacks];
-	Print["tables = ", tables];
 
 ];
 
@@ -542,28 +551,8 @@ Try := Module[{},
 (* Funzioni aggiuntive *)
 
 (* La funzione Indice mi dice fino a che posizione due parole sono uguali *)
-Indice[stack_, goal_] := Module[ {i, result},
-
-		i = 1;
-
-		For[i=1, i <= Length[stack], i++,
-			
-			If[ stack[[i]] === goal[[i]],
-								
-				result = i,
-
-				result = i - 1;
-				i = Length[stack] + 1;
-			];
-			
-		];
-	
-		If[ Length[stack] === 0,
-			result = 0;
-		];
-
-		result
-	];
+Indice[stack_, goal_] := Total[Map[(If[MatchQ[#[[1]], #[[2]]], 1, 0])&,
+								   Transpose[{stack, Take[goal, Length[stack]]}]]];
 
 
 DeleteCasesOnce[list_List, cases_List] := Module[{countq},
