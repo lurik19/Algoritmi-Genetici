@@ -1,7 +1,8 @@
+<< Statistics`;
 (******************* VARIABILI GLOBALI *******************)
 (* Parametri del problema *)
 Npop = 100; (* numero individui *)
-Ngen = 100; (* numero di generazioni *)
+Ngen = 150; (* numero di generazioni *)
 pc = 0.7; (* probabilità di avere crossover *)
 pm = 0.1; (* probabilità di avere una mutazione *)
 
@@ -91,7 +92,7 @@ DU[expr1_, expr2_] := Module[{contapassiDU},
 
 	contapassiDU = 0; 
 
-	While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal] && contapassiDUtot <= 15 * Length[goal],
+	While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal] (*&& contapassiDUtot <= 15*Length[goal]*),
 		ReleaseHold[expr1];
 		contapassiDU += 1;
 		contapassiDUtot += 1;
@@ -308,13 +309,13 @@ ricombina[popolazione_] := Module[{temp},
 
 ];
 
-Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
+Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff},
 
 	Headz = Map[Head, Level[individuo, Infinity]];
 	(* Premio la varietà del patrimonio genetico degli individui *)
 	fitnesstot = 500 * Length[Union[Headz]] * Length[stacks];
 
-	If[ Depth[individuo] <= 8 || trovato === 0,
+	If[ Depth[individuo] <= 6 && trovato === 0,
 		(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
 		   ma non lo butto. Altrimenti avrei individui molto profondi e specifici per
 		   risolvere il problema. Questi probabilmente dipenderebbero molto da una
@@ -322,7 +323,7 @@ Fitness[individuo_] := Module[{fitness, stackIniziale, istack},
 		(* Anche se abbiamo già trovato l'individuo (trovato=1) saltiamo tutta la valutazione dell'individuo e della sua fitness! *)
 
 		index = Map[(stack = #[[1]]; table = #[[2]]; EseguiIndividuo[individuo]; Indice[stack, goal])&, Transpose[{stacks, tables}]];
-		indextot = Total[index];
+		indextot = Plus @@ index;
 		
 		(* Conto quante lettere giuste ho nelle varie stack *)
 		fitnesstot += 500 * indextot;
@@ -387,7 +388,7 @@ generazione[popolazione_] := Module[{temp, r},
 ];
 
 
-run := Module[{igen, itry, trovato},
+run := Module[{igen, itry},
 
 	stacks = {{}, {u}, {u, e}, {u, n, l, a}, {s, v, r, u, a}, {r, e, i, n, u, v, a, l, s, e}, {u, e, i, s, e, r, a, l, n, v}};
 	tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, Length[stacks]}];
@@ -435,6 +436,9 @@ run := Module[{igen, itry, trovato},
 	
 	If[Length[listabad] != 0 || trovato === 0,
 		Print["Non è stato trovato l'individuo ideale! :("];
+		If[ trovato === 0,
+			NONTROVATI += 1;
+		];
 	];
 
 ];
@@ -451,24 +455,32 @@ runs[numruns_] := Module[{countgood, gengood},
 	times = {};
 	soluzioni = {};
 	
+	NONTROVATI = 0;
+	
 	Do[
 		Print["--------------------------- Run ", irun ," ---------------------------"];
-		time = AbsoluteTiming[run][[1]];
-		Print[time];
+		tstart = AbsoluteTime[];
+		run;
+		time = AbsoluteTime[] - tstart;
+		
+		Print[time, " secondi"];
 		
 		Print["\n"];
 
-        filename = "Fitness"<>ToString[irun]<>".dat";
+        filename = "Data/Fitness"<>ToString[irun]<>".dat";
 		Export[filename, fitnessMaxAndMean , "Table"];
-        numtry - Length[listabad] >>> counts.dat;
-		gentrovato >>> generations.dat;
-		time >>> times.dat;
-		soluzione >>> solutions.dat;
+        numtry - Length[listabad] >>> Data/counts.dat;
+
+		time >>> Data/times.dat;
+		If[trovato === 1,
+			gentrovato >>> Data/generations.dat;
+			soluzione >>> Data/solutions.dat;
+			AppendTo[gengood, gentrovato];
+			AppendTo[soluzioni, soluzione];
+		];
 		
 		AppendTo[countgood, numtry - Length[listabad]];
-		AppendTo[gengood, gentrovato];
-		AppendTo[times, time];
-		AppendTo[soluzioni, soluzione],
+		AppendTo[times, time],
 	
 		{irun, numruns}
 	];
@@ -527,8 +539,8 @@ Try := Module[{},
 (* La funzione Indice mi dice fino a che posizione due parole sono uguali *)
 Indice[stack_, goal_] := Module[{appo},
 	appo = 1;
-	Total[Map[(If[MatchQ[#[[1]], #[[2]]], appo*=1, appo*=0;] appo)&,
-			  Transpose[{stack, Take[goal, Length[stack]]}]]]
+	Plus @@ Map[(If[MatchQ[#[[1]], #[[2]]], appo*=1, appo*=0;] appo)&,
+			  Transpose[{stack, Take[goal, Length[stack]]}]]
 ];
 
 (* Elimino (da list) gli elementi una sola volta se appaiono una volta in cases, due volte se appaiono due, ecc. Poi con Ordering li mischio casualmente *)
