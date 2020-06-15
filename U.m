@@ -9,6 +9,8 @@ pm = 0.1; (* probabilità di avere una mutazione *)
 (* Parola desiderata *)
 goal = {u, n, i, v, e, r, s, a, l, e};
 
+MaxDepthInd = 8;
+MaxCountDU = 15 * Length[goal];
 
 (********************** OPERAZIONI **********************)
 
@@ -17,7 +19,7 @@ goal = {u, n, i, v, e, r, s, a, l, e};
 CS := Module[{result},
 
 	If[ Length[stack] > 0,
-		result = stack[[ Length[stack] ]],
+		result = stack[[-1]],
 		result = "Null"
 	];
 
@@ -92,7 +94,7 @@ DU[expr1_, expr2_] := Module[{contapassiDU},
 
 	contapassiDU = 0; 
 
-	While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal] (*&& contapassiDUtot <= 15*Length[goal]*),
+	While[ReleaseHold[expr2] === "Null" && contapassiDU <= 3*Length[goal] && contapassiDUtot <= MaxCountDU,
 		ReleaseHold[expr1];
 		contapassiDU += 1;
 		contapassiDUtot += 1;
@@ -190,6 +192,7 @@ EseguiIndividuo[individuo_] := Module[{result},
 ];
 
 
+(********** RICOMBINAZIONE GENETICA **********)
 (* Lista di tutti i possibili comandi *)
 tutto = {xEQ, xNOT, xDU, xMT, xMS, xCS, xTB, xNN};
 
@@ -309,20 +312,31 @@ ricombina[popolazione_] := Module[{temp},
 
 ];
 
-Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff},
+
+(********** FITNESS **********)
+Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff, tstart, tinizio},
+
+	tstart = AbsoluteTime[];
 
 	Headz = Map[Head, Level[individuo, Infinity]];
 	(* Premio la varietà del patrimonio genetico degli individui *)
 	fitnesstot = 500 * Length[Union[Headz]] * Length[stacks];
 
-	If[ Depth[individuo] <= 6 && trovato === 0,
+	If[ Depth[individuo] <= MaxDepthInd && trovato === 0,
 		(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
 		   ma non lo butto. Altrimenti avrei individui molto profondi e specifici per
 		   risolvere il problema. Questi probabilmente dipenderebbero molto da una
 		   specifica stack! *)
 		(* Anche se abbiamo già trovato l'individuo (trovato=1) saltiamo tutta la valutazione dell'individuo e della sua fitness! *)
 
-		index = Map[(stack = #[[1]]; table = #[[2]]; EseguiIndividuo[individuo]; Indice[stack, goal])&, Transpose[{stacks, tables}]];
+		index = Map[
+			(stack = #[[1]]; table = #[[2]];
+			tinizio = AbsoluteTime[];
+			EseguiIndividuo[individuo];
+			timez[[4]] += AbsoluteTime[] - tinizio;
+			Indice[stack, goal])&,
+			Transpose[{stacks, tables}]];
+		
 		indextot = Plus @@ index;
 		
 		(* Conto quante lettere giuste ho nelle varie stack *)
@@ -346,6 +360,8 @@ Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff},
 	If[ fitnesstot > fitnessmax,
 		fitnessmax = fitnesstot;
 	];
+	
+	timez[[2]] += AbsoluteTime[] - tstart;
 	
 	fitnesstot
 
@@ -371,9 +387,12 @@ suddivido[voti_, criterio_] := Module[{temp},
 
 
 (* Genero una popolazione di figli a partire da una popolazione *)
-generazione[popolazione_] := Module[{temp, r},
+generazione[popolazione_] := Module[{r, tstart},
 
 	votipop = voti[popolazione];
+	
+	tstart = AbsoluteTime[];
+	
 	intervallo = suddivido[votipop, FitnessProportionate];
 	genitori = Table[
 			r = Random[];
@@ -384,16 +403,15 @@ generazione[popolazione_] := Module[{temp, r},
 
 	figli = ricombina[genitori];
 	
+	timez[[3]] += AbsoluteTime[] - tstart;
+	
 	figli
 ];
 
 
-run := Module[{igen, itry},
+(********** RUN **********)
+run := Module[{itry, tstart},
 
-	stacks = {{}, {u}, {u, e}, {u, n, l, a}, {s, v, r, u, a}, {r, e, i, n, u, v, a, l, s, e}, {u, e, i, s, e, r, a, l, n, v}};
-	tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, Length[stacks]}];
-	
-	soluzione = "Null";
 	trovato = 0;
 	fitnessMaxAndMean = {};
 	
@@ -402,48 +420,45 @@ run := Module[{igen, itry},
 	
 	Do[		
 		fitnessmax = 0;
-
 		pop = generazione[pop];
-		
 		AppendTo[fitnessMaxAndMean, {N[Mean[votipop]], N[fitnessmax]}];
 		
 		If[ trovato === 1,
-			Print["Individuo trovato alla generazione ", igen, " con fitness = ", fitnesstrovato];
 			gentrovato = igen;
-			Break[];
+			Print["Individuo trovato alla generazione ", igen, " con fitness = ", fitnesstrovato];
+			
+		tstart = AbsoluteTime[];
+		numtry = 100;
+		Print["\n"];
+		Print["Provo la soluzione su ", numtry, " stack"];
+		countbad = 0;
+		Do[
+			Try;
+			If[Indice[stack, goal] != Length[goal],
+				countbad++;
+			],
+			
+			{itry, numtry}
+		];
+		Print["Numero di stack su cui la soluzione ha funzionato: ", numtry - countbad];
+		timez[[5]] += AbsoluteTime[] - tstart;
+		
+		Break[];
 		],
 		
 		{igen, Ngen}
 	];
 	
-	If[trovato === 1,
-		numtry = 100;
-		Print["\n"];
-		Print["Provo la soluzione su ", numtry, " stack"];
-		listabad = {};
-		Do[
-			stackRand;
-			EseguiIndividuo[soluzione];
-			If[Indice[stack, goal] != Length[goal],
-				AppendTo[listabad, stack];
-			],
-			
-			{itry, numtry}
-		];
-		
-		Print["Numero di stack su cui la soluzione ha funzionato: ", numtry - Length[listabad]];
-	];
-	
-	If[Length[listabad] != 0 || trovato === 0,
+	If[trovato === 0,
 		Print["Non è stato trovato l'individuo ideale! :("];
-		If[ trovato === 0,
-			NONTROVATI += 1;
-		];
+		NonTrovati += 1;
 	];
 
 ];
 
-runs[numruns_] := Module[{countgood, gengood},
+runs[numruns_] := Module[{countgood, gengood, tstart},
+
+	WriteSummary[];
 
 	stacks = {{}, {u}, {u, e}, {u, n, l, a}, {s, v, r, u, a}, {r, e, i, n, u, v, a, l, s, e}, {u, e, i, s, e, r, a, l, n, v}};
 	tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, Length[stacks]}];
@@ -455,86 +470,85 @@ runs[numruns_] := Module[{countgood, gengood},
 	times = {};
 	soluzioni = {};
 	
-	NONTROVATI = 0;
+	NonTrovati = 0;
+	
+	timez = Table[0, {7}];
 	
 	Do[
 		Print["--------------------------- Run ", irun ," ---------------------------"];
 		tstart = AbsoluteTime[];
 		run;
 		time = AbsoluteTime[] - tstart;
-		
+		timez[[1]] += time;
+				
 		Print[time, " secondi"];
-		
 		Print["\n"];
 
         filename = "Data/Fitness"<>ToString[irun]<>".dat";
 		Export[filename, fitnessMaxAndMean , "Table"];
-        numtry - Length[listabad] >>> Data/counts.dat;
 
-		time >>> Data/times.dat;
 		If[trovato === 1,
 			gentrovato >>> Data/generations.dat;
 			soluzione >>> Data/solutions.dat;
+	        numtry - countbad >>> Data/counts.dat;
 			AppendTo[gengood, gentrovato];
 			AppendTo[soluzioni, soluzione];
+			AppendTo[countgood, numtry - countbad];
 		];
 		
-		AppendTo[countgood, numtry - Length[listabad]];
+		N[time] >>> Data/times.dat;
 		AppendTo[times, time],
 	
 		{irun, numruns}
 	];
 	
+	If[ numruns > 1,
 	Print["Generazioni = ", N[Mean[gengood]], "+-", N[StandardDeviation[gengood]]];
-	Print["Stack ricostruite = ", N[Mean[countgood]], "+-", N[StandardDeviation[countgood]]];
+	Print["Stack ricostruite = ", N[Mean[countgood]], "+-", N[StandardDeviation[countgood]]],
 	
+	Print["Generazioni = ", N[Mean[gengood]]];
+	Print["Stack ricostruite = ", N[Mean[countgood]]];
+	
+	];
+	
+	Print["Numero di run in cui non si è trovata la soluzione = ", NonTrovati];
 	Print["Tempo medio per run = ", N[Mean[times]]];
-		
+	
+	Print[" \n--------------- Profiling ---------------"];
+	timez /= numruns;
+	Print["Tempo medio per run = ", timez[[1]]];
+	Print["Tempo medio Fitness per run = ", timez[[2]]];
+	Print["Tempo medio per il resto della riproduzione per run = ", timez[[3]]];
+	Print["Tempo medio esecuzione individui per run = ", timez[[4]]];
+	Print["Tempo medio test correttezza individui per run = ", timez[[5]]];
+
+	filename = "Data/Profiling.dat";
+	Export[filename, {{"Tempo medio per run = ", N[timez[[1]]]}, {"Tempo medio Fitness per run = ", N[timez[[2]]]}, {"Tempo medio per il resto della riproduzione per run = ", N[timez[[3]]]}, {"Tempo medio esecuzione individui per run = ", N[timez[[4]]]}, {"Tempo medio test correttezza individui per run = ", N[timez[[5]]]}}, "Table"];
+
 ];
 
-stackRand := Module[{lenstack},
+WriteSummary[] := Module[{filename},
+	filename = "Data/0_Summary.dat";
+	Export[filename, {{"Parola desiderata:", goal}, {"Npop =", Npop}, {"Ngen =", Ngen}, {"pc =", pc}, {"pm =", pm}, {"MaxDepthInd =", MaxDepthInd}, {"MaxCountDU =", MaxCountDU}} , "Table"];
+];
 
-	(* Genero la stack (e table) in modo casuale estraendo lettere da goal *)
+
+(********************** Funzioni aggiuntive **********************)
+
+(* Genero la stack (e table) in modo casuale estraendo le lettere da goal *)
+stackRand := Module[{lenstack},
 	lenstack = Random[Integer, {0, Length[goal]}];
 	stack = RandomSample[goal, lenstack];
 	table = DeleteCasesOnce[goal, stack];
 
 ];
 
-StacksAndTables[rand_] := Module[{is},
-
-	(* Se rand = 0 uso delle stack predefinite, se rand > 0 genero rand stack casuali *)
-	If[ rand === 0,
-		stacks = {{}, {u}, {u, e}, {u, n, l, a}, {s, v, r, u, a}, {r, e, i, n, u, v, a, l, s, e}, {u, e, i, s, e, r, a, l, n, v}};
-		tables = Table[DeleteCasesOnce[goal, stacks[[is]]], {is, Length[stacks]}],
-		
-		stacks = {};
-		tables = {};
-		Do[
-			stackRand;	
-			AppendTo[stacks, stack];
-			AppendTo[tables, table],
-			
-			{rand}
-		];
-		
-	];
-
-];
-
-
+(* Provo la soluzione su una stack casuale *)
 Try := Module[{},
-
 	stackRand;
-	Print["stack iniziale = ", stack];
-	
 	EseguiIndividuo[soluzione];
-	
-	Print["stack finale = ", stack];
-	
 ];
 
-(* Funzioni aggiuntive *)
 
 (* La funzione Indice mi dice fino a che posizione due parole sono uguali *)
 Indice[stack_, goal_] := Module[{appo},
