@@ -12,6 +12,9 @@ goal = {u, n, i, v, e, r, s, a, l, e};
 MaxDepthInd = 8;
 MaxCountDU = 15 * Length[goal];
 
+(* Nome cartella in cui salvare i dati *)
+FolderPath = "Data"<>ToString[MaxDepthInd]<>"/"
+
 (********************** OPERAZIONI **********************)
 
 (* Sensori *)
@@ -54,6 +57,7 @@ NN := Module[ {index, result},
 	result
 
 ];
+
 
 (* Comandi di movimento *)
 
@@ -367,6 +371,7 @@ Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff, tstart,
 
 ];
 
+
 voti[popolazione_] := Map[Fitness, popolazione];
 
 
@@ -456,8 +461,14 @@ run := Module[{itry, tstart},
 
 ];
 
+
 runs[numruns_] := Module[{countgood, gengood, tstart},
 
+	(* Creo la cartella in cui salvare i dati (se non esiste già) *)
+	Switch[ FileType[FolderPath],
+  		None, CreateDirectory[FolderPath],
+  		Directory, Null;
+  		];
 	WriteSummary[];
 
 	stacks = {{}, {u}, {u, e}, {u, n, l, a}, {s, v, r, u, a}, {r, e, i, n, u, v, a, l, s, e}, {u, e, i, s, e, r, a, l, n, v}};
@@ -484,19 +495,20 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 		Print[time, " secondi"];
 		Print["\n"];
 
-        filename = "Data/Fitness"<>ToString[irun]<>".dat";
+        filename = FolderPath<>"Fitness"<>ToString[irun]<>".dat";
 		Export[filename, fitnessMaxAndMean , "Table"];
 
 		If[trovato === 1,
-			gentrovato >>> Data/generations.dat;
-			soluzione >>> Data/solutions.dat;
-	        numtry - countbad >>> Data/counts.dat;
+			PutAppend[gentrovato, FolderPath<>"generations.dat"];
+			PutAppend[soluzione, FolderPath<>"solutions.dat"];
+			PutAppend[numtry - countbad, FolderPath<>"counts.dat"];
+			
 			AppendTo[gengood, gentrovato];
 			AppendTo[soluzioni, soluzione];
 			AppendTo[countgood, numtry - countbad];
 		];
 		
-		N[time] >>> Data/times.dat;
+		PutAppend[N[time], FolderPath<>"times.dat"];
 		AppendTo[times, time],
 	
 		{irun, numruns}
@@ -522,18 +534,20 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 	Print["Tempo medio esecuzione individui per run = ", timez[[4]]];
 	Print["Tempo medio test correttezza individui per run = ", timez[[5]]];
 
-	filename = "Data/Profiling.dat";
+	filename = FolderPath<>"Profiling.dat";
 	Export[filename, {{"Tempo medio per run = ", N[timez[[1]]]}, {"Tempo medio Fitness per run = ", N[timez[[2]]]}, {"Tempo medio per il resto della riproduzione per run = ", N[timez[[3]]]}, {"Tempo medio esecuzione individui per run = ", N[timez[[4]]]}, {"Tempo medio test correttezza individui per run = ", N[timez[[5]]]}}, "Table"];
 
 ];
 
+
+(********************** Funzioni aggiuntive **********************)
+
+(* Scrivo su file un sommario dei parametri per le run lanciate *)
 WriteSummary[] := Module[{filename},
-	filename = "Data/0_Summary.dat";
+	filename = FolderPath<>"0_Summary.dat";
 	Export[filename, {{"Parola desiderata:", goal}, {"Npop =", Npop}, {"Ngen =", Ngen}, {"pc =", pc}, {"pm =", pm}, {"MaxDepthInd =", MaxDepthInd}, {"MaxCountDU =", MaxCountDU}} , "Table"];
 ];
 
-
-(********************** Funzioni aggiuntive **********************)
 
 (* Genero la stack (e table) in modo casuale estraendo le lettere da goal *)
 stackRand := Module[{lenstack},
@@ -542,6 +556,7 @@ stackRand := Module[{lenstack},
 	table = DeleteCasesOnce[goal, stack];
 
 ];
+
 
 (* Provo la soluzione su una stack casuale *)
 Try := Module[{},
@@ -557,8 +572,10 @@ Indice[stack_, goal_] := Module[{appo},
 			  Transpose[{stack, Take[goal, Length[stack]]}]]
 ];
 
+
 (* Elimino (da list) gli elementi una sola volta se appaiono una volta in cases, due volte se appaiono due, ecc. Poi con Ordering li mischio casualmente *)
 DeleteCasesOnce[list_List, cases_List] := #[[ Ordering[Random[] & /@ #] ]] & @ Fold[DeleteCases[##, 1, 1]&, list, cases];
+
 
 (* ATTENZIONE! Da Mathematica 6.0 RandomSample è implementato di default! Se si sta usando una versione di Mathematica >= 6.0 nel momento dell'esecuzione verrà restituito un errore, perché RandomSample ha l'attributo Protected. Questo però non causa problemi e Mathematica semplicemente utilizzerà RandomSample default. (Per evitare l'errore commentare questa definizione) *)
 RandomSample[lis_List, num_] := Module[{len, selectfunc, ll, n, aa},
