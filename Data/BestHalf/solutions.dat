@@ -1,0 +1,355 @@
+Hold[xEQ[xDU[xCS, xEQ[xEQ[xNOT[xEQ[xNN, xMS[xCS]]], 
+     xEQ[xEQ[xDU[xTB, xEQ[xEQ[xNOT[xMT[xCS]], xCS], 
+         xEQ[xEQ[xDU[xTB, xEQ[xEQ[xNOT[xMT[xCS]], xEQ[xEQ[xEQ[xMS[xNN], 
+                 xMS[xNN]], xTB], xMS[xNN]]], xEQ[xNN, xMT[xTB]]]], 
+           xMS[xNN]], xCS]]], xEQ[xEQ[xMS[xCS], xEQ[xEQ[xNN, xTB], xNN]], 
+        xCS]], xMS[xTB]]], xMS[xTB]]], xMS[xNN]]]
+Hold[xEQ[xNOT[xDU[xNN, xEQ[xMS[xTB], 
+     xNOT[xNOT[xDU[xNOT[xNN], xEQ[xEQ[xMS[xNN], xDU[xNN, 
+           xEQ[xEQ[xMT[xCS], xDU[xTB, xDU[xEQ[xNN, xMS[xNN]], xNOT[
+                xMS[xNN]]]]], xNOT[xNOT[xDU[xNOT[xNN], xEQ[xEQ[xMS[xNN], 
+                 xMS[xTB]], xDU[xTB, xNOT[xEQ[xCS, xMT[xCS]]]]]]]]]]], 
+         xDU[xTB, xNOT[xMS[xNN]]]]]]]]]], xMS[xNN]]]
+Hold[xEQ[xNOT[xDU[xDU[xMS[xNN], xNOT[xDU[xDU[xNN, xNOT[xMS[xNN]]], 
+       xNOT[xMS[xNN]]]]], xEQ[xNOT[xDU[xMS[xNN], xEQ[xNN, xMT[xCS]]]], 
+     xNOT[xMS[xNN]]]]], xDU[xMS[xNN], 
+   xEQ[xDU[xDU[xDU[xTB, xNOT[xDU[xNN, xNOT[xMS[xNN]]]]], 
+      xEQ[xNOT[xDU[xMS[xNN], xEQ[xNN, xMT[xCS]]]], xNOT[xMS[xNN]]]], 
+     xDU[xCS, xEQ[xNOT[xNN], xNOT[xMS[xNN]]]]], xNOT[xNN]]]]]
+Hold[xEQ[xDU[xMT[xTB], xNOT[xMT[xCS]]], 
+  xEQ[xMS[xNN], xEQ[xEQ[xMS[xCS], xDU[xMS[xNN], 
+      xNOT[xEQ[xEQ[xCS, xMS[xNN]], xNOT[xCS]]]]], xMS[xNN]]]]]
+Hold[xEQ[xNOT[xEQ[xEQ[xNOT[xMS[xCS]], 
+     xNOT[xDU[xMT[xCS], xEQ[xNOT[xNN], xNOT[xMS[xTB]]]]]], xNOT[xNN]]], 
+  xNOT[xDU[xTB, xEQ[xNOT[xMS[xNN]], xMS[xNN]]]]]]
+Hold[xEQ[xDU[xDU[xMS[xNN], xDU[xNOT[xNN], xDU[xNOT[xMS[xNN]], xMT[xCS]]]], 
+   xDU[xDU[xDU[xMS[xNN], xDU[xEQ[xMS[xNN], xMS[xNN]], 
+       xNOT[xDU[xMS[xTB], xDU[xMS[xNN], xNOT[xNN]]]]]], 
+     xDU[xNOT[xNN], xMT[xNN]]], 
+    xDU[xDU[xMS[xCS], xDU[xMS[xNN], xDU[xNOT[xMS[xNN]], xMT[xCS]]]], 
+     xDU[xDU[xDU[xMS[xNN], xDU[xEQ[xDU[xDU[xCS, xEQ[xNN, xTB]], 
+           xDU[xTB, xEQ[xMS[xCS], xMS[xCS]]]], xEQ[xNOT[xNN], 
+           xDU[xCS, xEQ[xNN, xTB]]]], xNOT[xCS]]], xDU[xNOT[xNN], 
+        xEQ[xMS[xCS], xMS[xNN]]]], xMS[xNN]]]]], xNN]]
+Hold[xEQ[xEQ[xDU[xEQ[xNN, xMT[xCS]], xNOT[xMT[xCS]]], xCS], 
+  xDU[xMS[xNN], xEQ[xDU[xCS, xEQ[xTB, xNN]], xMS[xNN]]]]]
+Hold[xEQ[xMT[xTB], xDU[xDU[xEQ[xCS, xTB], xMS[xNN]], 
+   xEQ[xMS[xNN], xDU[xDU[xMS[xNN], xEQ[xMS[xNN], xMT[xCS]]], 
+     xDU[xDU[xDU[xMS[xNN], xMS[xNN]], xEQ[xMS[xNN], xDU[xMS[xNN], 
+         xMT[xCS]]]], xMS[xNN]]]]]]]
+Hold[xEQ[xDU[xEQ[xNOT[xNN], xEQ[xDU[xMT[xTB], xMT[xCS]], 
+     xEQ[xNN, xMS[xNN]]]], xEQ[xNN, xDU[xNN, xNOT[xMS[xNN]]]]], xMS[xNN]]]
+Hold[xEQ[xCS, xDU[xEQ[xEQ[xMT[xCS], xMT[xCS]], xDU[xNOT[xMS[xNN]], 
+     xNOT[xMS[xNN]]]], xNOT[xNN]]]]
+Hold[
+ xEQ[xNOT[xNOT[xDU[xCS, xEQ[xMT[xTB], xNOT[xDU[xNOT[xNN], 
+        xDU[xNOT[xDU[xNN, xEQ[xDU[xEQ[xCS, xTB], xEQ[xTB, xMT[xTB]]], 
+            xMT[xCS]]]], xEQ[xNOT[xTB], xCS]]]]]]]], 
+  xDU[xDU[xMS[xNN], xEQ[xMS[xNN], xMT[xTB]]], 
+   xNOT[xNOT[xNOT[xDU[xDU[xNN, xDU[xDU[xNOT[xNOT[xNOT[xMS[xNN]]]], 
+          xNOT[xNN]], xNOT[xMS[xNN]]]], xDU[xNOT[xNOT[xTB]], 
+        xNOT[xDU[xNOT[xTB], xDU[xMT[xNN], xDU[xMS[xNN], 
+            xNOT[xMS[xNN]]]]]]]]]]]]]]
+Hold[xEQ[xNOT[xDU[xMS[xNN], xEQ[xEQ[xTB, xDU[xNOT[xTB], xEQ[xTB, xMT[xCS]]]], 
+     xNN]]], xDU[xEQ[xMS[xTB], xDU[xDU[xTB, xEQ[xCS, xMS[xNN]]], 
+     xEQ[xMS[xCS], xNN]]], xNOT[xDU[xNN, xNOT[xMS[xCS]]]]]]]
+Hold[xEQ[xNOT[xDU[xEQ[xMT[xNN], xEQ[xEQ[xMT[xCS], xTB], xNN]], 
+    xEQ[xDU[xNOT[xMS[xNN]], xEQ[xMT[xCS], xEQ[xNN, xMS[xNN]]]], 
+     xNOT[xMS[xCS]]]]], xNOT[xDU[xTB, xEQ[xNOT[xMT[xTB]], xNOT[xMS[xNN]]]]]]]
+Hold[xEQ[xNOT[xEQ[xDU[xTB, xEQ[xDU[xMT[xNN], xEQ[xMT[xCS], xMS[xNN]]], xTB]], 
+    xDU[xCS, xDU[xCS, xEQ[xDU[xMT[xNN], xNOT[xMS[xNN]]], xNN]]]]], 
+  xNOT[xDU[xMT[xNN], xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xDU[xNOT[xMS[xCS]], 
+   xEQ[xDU[xNN, xEQ[xEQ[xNOT[xTB], xEQ[xNN, xEQ[xMT[xNN], xMS[xNN]]]], xNN]], 
+    xMS[xCS]]], 
+  xEQ[xEQ[xCS, xDU[xTB, xEQ[xTB, xDU[xNN, 
+       xEQ[xEQ[xEQ[xDU[xNN, xMT[xNN]], xMT[xCS]], 
+         xEQ[xEQ[xCS, xDU[xDU[xMT[xTB], xEQ[xNOT[xNOT[xMS[xTB]]], xMT[xCS]]], 
+            xEQ[xTB, xMS[xNN]]]], xEQ[xCS, xMS[xNN]]]], xNN]]]]], xNN]]]
+Hold[xEQ[xDU[xTB, xNOT[xMT[xCS]]], xDU[xCS, xEQ[xMS[xNN], xMS[xNN]]]]]
+Hold[xEQ[xDU[xNN, xNOT[xMT[xCS]]], xNOT[xDU[xMT[xNN], xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xEQ[xDU[xMS[xTB], xDU[xCS, xEQ[xMT[xCS], xCS]]], 
+   xDU[xMS[xTB], xDU[xEQ[xNN, xNN], xEQ[xMS[xCS], xMT[xNN]]]]], 
+  xEQ[xMT[xNN], xDU[xEQ[xNN, xDU[xEQ[xNN, xNOT[xMS[xNN]]], xEQ[xTB, xNN]]], 
+    xEQ[xMS[xNN], xMT[xNN]]]]]]
+Hold[xEQ[xNN, xDU[xDU[xMT[xCS], xNOT[xNN]], 
+   xDU[xDU[xMS[xNN], xNOT[xMS[xNN]]], xNOT[xNN]]]]]
+Hold[xEQ[xDU[xMS[xNN], xDU[xMS[xNN], xDU[xMS[xNN], xNOT[xMT[xCS]]]]], 
+  xDU[xMS[xNN], xNOT[xDU[xTB, xDU[xCS, 
+      xNOT[xDU[xCS, xEQ[xNN, xMS[xNN]]]]]]]]]]
+Hold[xEQ[xDU[xMT[xCS], xNOT[xCS]], xDU[xMS[xNN], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xTB, xEQ[xEQ[xCS, xDU[xNOT[xMT[xCS]], xMS[xTB]]], 
+   xDU[xCS, xDU[xNOT[xDU[xNN, xNOT[xMS[xNN]]]], xEQ[xNN, xNOT[xNN]]]]]]]
+Hold[xEQ[xDU[xEQ[xTB, xMT[xCS]], 
+   xDU[xDU[xNN, xEQ[xCS, xDU[xMS[xNN], xNOT[xNN]]]], 
+    xDU[xMT[xNN], xEQ[xNOT[xNOT[xMT[xCS]]], xMS[xNN]]]]], xMS[xNN]]]
+Hold[xEQ[xMS[xNN], xEQ[xNOT[xDU[xEQ[xNOT[xNN], xDU[xMS[xTB], xNOT[xCS]]], 
+     xNOT[xEQ[xNOT[xDU[xNOT[xNOT[xTB]], xNOT[xMS[xNN]]]], xMT[xNN]]]]], 
+   xDU[xEQ[xNOT[xNN], xEQ[xNOT[xDU[xEQ[xDU[xCS, xEQ[xMT[xCS], xTB]], 
+         xDU[xEQ[xNOT[xNN], xMT[xNN]], xNOT[xCS]]], 
+        xNOT[xNOT[xDU[xEQ[xNOT[xCS], xEQ[xNOT[xCS], xMS[xNN]]], 
+           xNOT[xNN]]]]]], xMS[xNN]]], xNOT[xCS]]]]]
+Hold[xEQ[xMT[xTB], 
+  xDU[xDU[xCS, xEQ[xEQ[xDU[xDU[xCS, xEQ[xEQ[xMT[xNN], xMT[xCS]], xMS[xNN]]], 
+       xNOT[xEQ[xMS[xNN], xMS[xNN]]]], xMT[xCS]], xMS[xNN]]], 
+   xDU[xNN, xNOT[xNN]]]]]
+Hold[xEQ[xDU[xMT[xCS], xEQ[xMT[xTB], xNN]], 
+  xDU[xDU[xEQ[xCS, xMT[xNN]], xNOT[xTB]], 
+   xDU[xDU[xNN, xDU[xMS[xNN], xMT[xNN]]], xEQ[xNOT[xNN], 
+     xDU[xMS[xNN], xEQ[xNN, xCS]]]]]]]
+Hold[xEQ[xDU[xNOT[xNOT[xMT[xNN]]], xNOT[xMT[xCS]]], 
+  xDU[xDU[xCS, xNOT[xEQ[xEQ[xNOT[xNN], xDU[xMS[xTB], xNOT[xMT[xNN]]]], 
+      xEQ[xDU[xMS[xNN], xMS[xNN]], xMS[xNN]]]]], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xDU[xCS, xEQ[xMT[xCS], xNOT[xMT[xNN]]]], 
+  xDU[xEQ[xMS[xNN], xMS[xNN]], xMT[xNN]]]]
+Hold[xEQ[xDU[xEQ[xTB, xDU[xNOT[xNN], xEQ[xMT[xNN], xMT[xNN]]]], 
+   xNOT[xEQ[xEQ[xTB, xMT[xNN]], xNOT[xDU[xNOT[xNN], xDU[xEQ[xTB, xMT[xNN]], 
+        xNOT[xEQ[xEQ[xTB, xMT[xCS]], xNOT[xDU[xNOT[xNN], xEQ[xMT[xNN], 
+             xMS[xNN]]]]]]]]]]]], xNOT[xEQ[xNOT[xEQ[xMS[xNN], xCS]], 
+    xMS[xNN]]]]]
+Hold[xEQ[xNOT[xDU[xNOT[xMS[xNN]], 
+    xEQ[xNOT[xDU[xNOT[xMS[xNN]], xNOT[xEQ[xDU[xNOT[xEQ[xMT[xNN], xMT[xCS]]], 
+          xNOT[xEQ[xTB, xEQ[xMT[xCS], xDU[xMT[xNN], xNOT[xMS[xNN]]]]]]], 
+         xNOT[xEQ[xDU[xNOT[xEQ[xMT[xNN], xMT[xCS]]], 
+            xNOT[xEQ[xEQ[xTB, xEQ[xMT[xCS], xDU[xMT[xNN], xNOT[xDU[xTB, 
+                   xNOT[xNN]]]]]], xEQ[xMT[xCS], xDU[xMT[xNN], 
+                xNOT[xMS[xNN]]]]]]], xNOT[xMS[xNN]]]]]]]], xMS[xCS]]]], 
+  xNOT[xDU[xNOT[xMS[xNN]], xNOT[xNN]]]]]
+Hold[xEQ[xDU[xDU[xNN, xEQ[xMT[xCS], xMT[xTB]]], 
+   xNOT[xDU[xTB, xDU[xNN, xNOT[xMS[xNN]]]]]], xNOT[xNOT[xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xEQ[xMS[xCS], xTB], 
+  xDU[xDU[xNN, xEQ[xMS[xNN], xEQ[xEQ[xNOT[xTB], xMS[xNN]], 
+      xEQ[xTB, xDU[xMT[xCS], xNOT[xCS]]]]]], xDU[xNOT[xMS[xTB]], 
+    xEQ[xDU[xMT[xCS], xEQ[xNN, xMS[xNN]]], xCS]]]]]
+Hold[xEQ[xDU[xMT[xCS], xMS[xTB]], xDU[xTB, xNOT[xMS[xNN]]]]]
+Hold[xEQ[xEQ[xMT[xCS], xDU[xNN, xEQ[xMT[xCS], xTB]]], 
+  xDU[xMT[xCS], xEQ[xMS[xNN], xMS[xNN]]]]]
+Hold[xEQ[xTB, 
+  xDU[xDU[xTB, xEQ[xEQ[xMT[xNN], xDU[xTB, 
+       xEQ[xEQ[xEQ[xDU[xMS[xNN], xEQ[xMT[xCS], xMS[xNN]]], xTB], xMS[xNN]], 
+        xNOT[xEQ[xNOT[xTB], xCS]]]]], xNOT[xCS]]], 
+   xEQ[xMS[xNN], xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xCS, xDU[xMT[xNN], xEQ[xNOT[xMT[xCS]], xDU[xTB, xNOT[xMS[xNN]]]]]]]
+Hold[xEQ[xEQ[xNOT[xCS], xDU[xMT[xTB], xEQ[xMS[xNN], xTB]]], 
+  xDU[xNN, xEQ[xDU[xMT[xCS], xDU[xNN, 
+      xEQ[xDU[xMT[xCS], xEQ[xMS[xNN], xNOT[xEQ[xDU[xMT[xCS], 
+            xEQ[xMS[xNN], xNOT[xMT[xNN]]]], xCS]]]], xCS]]], xCS]]]]
+Hold[xEQ[xEQ[xDU[xCS, xNOT[xMT[xCS]]], xDU[xNN, xNOT[xMS[xNN]]]], 
+  xEQ[xTB, xCS]]]
+Hold[xEQ[xNOT[xNN], xDU[xDU[xMT[xCS], xNOT[xCS]], 
+   xNOT[xDU[xMS[xCS], xDU[xNN, xEQ[xMS[xNN], xMS[xNN]]]]]]]]
+Hold[xEQ[xMS[xNN], xDU[xNN, xDU[xDU[xMT[xCS], xNOT[xNN]], 
+    xNOT[xDU[xNOT[xMT[xNN]], xNOT[xMS[xNN]]]]]]]]
+Hold[xEQ[xEQ[xNOT[xNOT[xNOT[xMT[xCS]]]], xEQ[xMS[xNN], 
+    xEQ[xMT[xTB], 
+     xEQ[xEQ[xNOT[xNOT[xNOT[xEQ[xEQ[xNOT[xDU[xNOT[xMT[xTB]], xDU[xTB, xEQ[
+                xNOT[xNOT[xNOT[xEQ[xEQ[xNOT[xDU[xNOT[xMT[xTB]], xDU[xTB, 
+                        xDU[xDU[xTB, xDU[xMS[xTB], xDU[xNOT[xCS], xNOT[
+                          xMT[xNN]]]]], xNOT[xMT[xCS]]]]]], xEQ[xMS[xNN], 
+                      xEQ[xMT[xTB], xEQ[xEQ[xNOT[xNOT[xNOT[xEQ[xMS[xNN], 
+                          xNOT[xMS[xNN]]]]]], xNOT[xEQ[xMS[xNN], xNN]]], 
+                        xMS[xTB]]]]], xNOT[xMS[xNN]]]]]], xNOT[xEQ[xMS[xNN], 
+                  xNN]]]]]], xEQ[xMS[xNN], xEQ[xMT[xTB], xEQ[xEQ[
+                xNOT[xNOT[xNOT[xEQ[xMS[xNN], xNOT[xMS[xNN]]]]]], 
+                xNOT[xEQ[xMS[xNN], xNN]]], xMS[xTB]]]]], xNOT[xMS[xNN]]]]]], 
+       xNOT[xEQ[xMS[xNN], xNN]]], xMS[xTB]]]]], 
+  xEQ[xEQ[xMS[xNN], xMS[xNN]], xMS[xTB]]]]
+Hold[xEQ[xNOT[xEQ[xNOT[xDU[xMS[xTB], xDU[xMT[xCS], xEQ[xMT[xNN], xCS]]]], 
+    xCS]], xDU[xMS[xNN], xDU[xNN, xDU[xNN, xDU[xNN, xNOT[xMS[xNN]]]]]]]]
+Hold[xEQ[xDU[xNOT[xNOT[xEQ[xEQ[xMT[xNN], xCS], xMT[xCS]]]], 
+   xDU[xMS[xNN], xEQ[xNOT[xMS[xNN]], xMS[xNN]]]], xNN]]
+Hold[xEQ[xMT[xCS], xDU[xDU[xMS[xNN], xNOT[xMS[xCS]]], 
+   xEQ[xMS[xNN], xDU[xMS[xNN], 
+     xEQ[xDU[xTB, xNOT[xDU[xMT[xNN], xEQ[xMS[xNN], xEQ[xMS[xNN], 
+           xDU[xMT[xNN], xEQ[xNOT[xNOT[xDU[xMS[xCS], xDU[xNN, xEQ[xTB, 
+                  xEQ[xTB, xMT[xCS]]]]]]], xDU[xMT[xNN], xNOT[xDU[xMT[xNN], 
+                xMS[xNN]]]]]]]]]]], xNN]]]]]]
+Hold[xEQ[xEQ[xDU[xTB, xEQ[xDU[xNN, xEQ[xMT[xTB], xDU[xTB, xMT[xCS]]]], 
+     xNOT[xEQ[xDU[xNN, xNOT[xMS[xNN]]], xDU[xNOT[xMS[xNN]], 
+        xEQ[xNOT[xNOT[xDU[xTB, xEQ[xMS[xNN], xCS]]]], xDU[xNOT[xMS[xNN]], 
+          xNOT[xNN]]]]]]]], xMS[xNN]], xTB]]
+Hold[xEQ[xEQ[xDU[xDU[xEQ[xDU[xMT[xNN], xNOT[xEQ[xNOT[xNOT[xTB]], xTB]]], 
+      xNN], xNOT[xMT[xCS]]], xDU[xNN, xNOT[xNOT[xMS[xNN]]]]], 
+   xDU[xNOT[xMS[xNN]], xDU[xNN, xNOT[xNN]]]], 
+  xDU[xCS, xEQ[xEQ[xDU[xNOT[xCS], xDU[xNN, 
+       xDU[xDU[xNN, xDU[xMS[xCS], xNOT[xEQ[xCS, xDU[xNOT[xTB], 
+             xDU[xNN, xDU[xMS[xCS], xNOT[xNN]]]]]]]], 
+        xDU[xCS, xNOT[xMS[xNN]]]]]], xNOT[xTB]], xCS]]]]
+Hold[xEQ[xEQ[xDU[xNOT[xTB], xEQ[xNOT[xDU[xEQ[xMT[xNN], xMT[xCS]], 
+       xEQ[xMS[xNN], xNOT[xMS[xNN]]]]], xMS[xNN]]], 
+   xEQ[xMS[xCS], xEQ[xNN, xCS]]], xCS]]
+Hold[xEQ[xDU[xMT[xNN], 
+   xEQ[xDU[xDU[xMT[xNN], xEQ[xEQ[xNN, xEQ[xMT[xTB], xMT[xCS]]], 
+       xNOT[xDU[xMS[xCS], xNOT[xNOT[xEQ[xCS, xMS[xNN]]]]]]]], 
+     xNOT[xMS[xNN]]], xNOT[xCS]]], 
+  xNOT[xDU[xCS, xNOT[xNOT[xNOT[xEQ[xCS, xMS[xNN]]]]]]]]]
+Hold[xEQ[xDU[xEQ[xDU[xMT[xCS], xNOT[xNN]], xMS[xTB]], 
+   xEQ[xMS[xNN], xNOT[xNOT[xDU[xNOT[xCS], xNOT[xMS[xNN]]]]]]], xMS[xNN]]]
+Hold[xEQ[xMT[xNN], xDU[xEQ[xNOT[xDU[xCS, xMS[xNN]]], xMT[xTB]], 
+   xDU[xEQ[xNOT[xDU[xTB, xNOT[xMT[xCS]]]], xNN], 
+    xEQ[xDU[xCS, xDU[xDU[xCS, xNOT[xEQ[xMS[xNN], xMT[xCS]]]], 
+       xNOT[xMS[xNN]]]], xMS[xTB]]]]]]
+Hold[xEQ[xTB, xDU[xTB, xDU[xNOT[xMT[xTB]], 
+    xDU[xTB, xEQ[xNOT[xMS[xNN]], xDU[xEQ[xMS[xNN], 
+        xEQ[xDU[xNOT[xTB], xEQ[xTB, xMT[xCS]]], xMT[xCS]]], 
+       xNOT[xNOT[xMS[xNN]]]]]]]]]]
+Hold[xEQ[xEQ[xDU[xTB, xNOT[xMT[xCS]]], 
+   xNOT[xDU[xTB, xDU[xMT[xCS], xNOT[xMS[xNN]]]]]], xMS[xCS]]]
+Hold[xEQ[xDU[xCS, xDU[xCS, xNOT[xMT[xCS]]]], xDU[xMS[xNN], xNOT[xNN]]]]
+Hold[xEQ[xDU[xNN, xDU[xMT[xNN], xNOT[xMT[xCS]]]], 
+  xDU[xDU[xTB, xNOT[xMS[xNN]]], xDU[xNN, xNOT[xNN]]]]]
+Hold[xEQ[xDU[xTB, xNOT[xMT[xCS]]], xDU[xTB, xNOT[xMS[xNN]]]]]
+Hold[xEQ[xNOT[xDU[xEQ[xCS, xEQ[xMS[xNN], xCS]], xDU[xNOT[xMT[xNN]], 
+     xNOT[xMS[xNN]]]]], xNOT[xNOT[xEQ[xDU[xNOT[xMS[xTB]], xNOT[xMT[xCS]]], 
+     xDU[xMS[xNN], xEQ[xMT[xNN], xDU[xMS[xNN], xDU[xMS[xNN], 
+         xEQ[xNOT[xNOT[xMT[xNN]]], xMS[xNN]]]]]]]]]]]
+Hold[
+ xEQ[xNOT[xDU[xDU[xMS[xTB], xDU[xNN, 
+      xDU[xDU[xMT[xTB], xDU[xNN, xDU[xTB, xNOT[xNOT[xNOT[xCS]]]]]], 
+       xNOT[xNN]]]], xDU[xNN, xDU[xDU[xMT[xCS], xNOT[xCS]], xNOT[xCS]]]]], 
+  xDU[xCS, xEQ[xMS[xNN], xEQ[xCS, xTB]]]]]
+Hold[xEQ[xDU[xNOT[xMT[xCS]], xEQ[xDU[xNOT[xNOT[xCS]], xEQ[xMS[xNN], xCS]], 
+    xEQ[xNN, xMT[xNN]]]], xMS[xNN]]]
+Hold[xEQ[xDU[xNOT[xDU[xNN, xNOT[xMT[xCS]]]], 
+   xDU[xMT[xCS], xEQ[xMS[xNN], xDU[xCS, xNOT[xMS[xNN]]]]]], xMS[xCS]]]
+Hold[xEQ[xNOT[xDU[xNN, xNOT[xMT[xCS]]]], xDU[xMS[xNN], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xDU[xMT[xTB], xNOT[xMT[xCS]]], 
+  xDU[xMS[xNN], xDU[xNOT[xTB], xDU[xMT[xTB], xDU[xMS[xNN], 
+      xNOT[xMS[xNN]]]]]]]]
+Hold[xEQ[xDU[xMS[xCS], xEQ[xDU[xMS[xNN], 
+     xEQ[xDU[xMS[xNN], xEQ[xMT[xNN], xDU[xMT[xCS], xEQ[xTB, xCS]]]], xTB]], 
+    xNOT[xDU[xTB, xEQ[xMS[xTB], xEQ[xDU[xCS, xDU[xNOT[xNN], xNOT[xMS[xNN]]]], 
+        xTB]]]]]], xMS[xCS]]]
+Hold[xEQ[xDU[xDU[xCS, xEQ[xNN, xMT[xCS]]], xEQ[xTB, xMT[xCS]]], 
+  xDU[xTB, xEQ[xNOT[xMS[xNN]], xNOT[xEQ[xNOT[xNOT[xMS[xNN]]], xMS[xNN]]]]]]]
+Hold[xEQ[xDU[xMT[xNN], xDU[xEQ[xMT[xNN], xCS], 
+    xEQ[xNOT[xEQ[xDU[xTB, xDU[xMT[xNN], xDU[xCS, xEQ[xMT[xCS], xTB]]]], 
+       xDU[xNOT[xDU[xNN, xEQ[xMS[xNN], xCS]]], 
+        xDU[xNN, xEQ[xDU[xCS, xDU[xNN, xEQ[xNOT[xMS[xCS]], xMS[xCS]]]], 
+          xDU[xEQ[xCS, xMS[xNN]], xDU[xEQ[xTB, xNN], xEQ[xCS, 
+             xMS[xNN]]]]]]]]], xMT[xNN]]]], xMS[xCS]]]
+Hold[xEQ[xNOT[xDU[xCS, xNOT[xMT[xCS]]]], xDU[xCS, xNOT[xMS[xNN]]]]]
+Hold[xEQ[xNOT[xDU[xNOT[xNN], 
+    xDU[xDU[xMT[xCS], xDU[xDU[xNOT[xNOT[xNN]], 
+        xDU[xNOT[xEQ[xEQ[xDU[xMT[xCS], xDU[xMT[xCS], xDU[xNOT[xNN], xDU[
+                xDU[xNN, xNOT[xCS]], xEQ[xDU[xMT[xCS], xDU[xCS, 
+                   xEQ[xDU[xTB, xEQ[xNN, xNOT[xNOT[xDU[xMT[xNN], xDU[
+                          xMT[xCS], xDU[xNOT[xNN], xDU[xMT[xNN], xEQ[xMT[
+                          xNN], xNN]]]]]]]]], xMS[xNN]]]], xNOT[
+                  xNOT[xNN]]]]]]], xMT[xTB]], xNOT[xMT[xNN]]]], xMS[xNN]]], 
+       xDU[xTB, xEQ[xMT[xNN], xNOT[xMS[xNN]]]]]], 
+     xDU[xNOT[xNN], xDU[xCS, xDU[xDU[xMT[xCS], xNOT[xMT[xCS]]], 
+        xDU[xNOT[xNN], xMS[xNN]]]]]]]], xMS[xTB]]]
+Hold[xEQ[xDU[xMT[xCS], xEQ[xMT[xCS], xMS[xTB]]], 
+  xDU[xNOT[xMS[xNN]], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xNOT[xDU[xEQ[xMS[xTB], xMT[xCS]], 
+    xDU[xDU[xMT[xNN], xDU[xNOT[xMS[xNN]], xEQ[xMT[xCS], xTB]]], 
+     xEQ[xDU[xTB, xNOT[xDU[xMT[xNN], xEQ[xNN, xMS[xNN]]]]], xTB]]]], 
+  xNOT[xMS[xNN]]]]
+Hold[xEQ[xDU[xNOT[xNOT[xTB]], xEQ[xDU[xDU[xMT[xCS], xNOT[xMS[xNN]]], 
+     xNOT[xMS[xTB]]], xNOT[xMT[xCS]]]], xDU[xDU[xMT[xTB], xNOT[xMS[xNN]]], 
+   xNOT[xMS[xNN]]]]]
+Hold[xEQ[xEQ[xDU[xNOT[xCS], 
+    xEQ[xDU[xEQ[xEQ[xMT[xCS], xDU[xEQ[xNN, xNOT[xMT[xNN]]], xMS[xNN]]], 
+       xMS[xTB]], xNOT[xNN]], xNOT[xEQ[xEQ[xMT[xNN], xMT[xCS]], xNN]]]], 
+   xDU[xEQ[xEQ[xMT[xCS], xDU[xNOT[xTB], xMS[xNN]]], xMS[xTB]], xNOT[xNN]]], 
+  xCS]]
+Hold[xEQ[xNN, xEQ[xDU[xMT[xCS], xDU[xMS[xNN], xEQ[xEQ[xNN, xNOT[xMT[xCS]]], 
+      xMT[xCS]]]], xDU[xMS[xNN], xEQ[xMS[xNN], xMS[xNN]]]]]]
+Hold[xEQ[xEQ[xEQ[xMT[xNN], xEQ[xTB, xCS]], 
+   xNOT[xEQ[xDU[xMT[xNN], xEQ[xEQ[xMS[xNN], xEQ[xTB, 
+         xEQ[xTB, xEQ[xMS[xCS], xEQ[xNN, xMS[xNN]]]]]], xEQ[xNN, xTB]]], 
+     xEQ[xNN, xCS]]]], xDU[xEQ[xCS, xMS[xNN]], 
+   xNOT[xDU[xEQ[xNN, xEQ[xTB, xEQ[xTB, 
+        xEQ[xEQ[xCS, xEQ[xNN, xNOT[xMT[xCS]]]], 
+         xNOT[xDU[xEQ[xNN, xEQ[xNOT[xMS[xTB]], xEQ[xNN, xCS]]], 
+           xNOT[xNOT[xEQ[xNN, xEQ[xTB, xEQ[xTB, xEQ[xEQ[xCS, xEQ[xNN, 
+                   xNOT[xMT[xCS]]]], xNOT[xDU[xEQ[xNN, xEQ[xNOT[xMS[xTB]], 
+                     xEQ[xNN, xCS]]], xNOT[xNOT[xEQ[xNN, xMS[
+                       xNN]]]]]]]]]]]]]]]]]], xEQ[xEQ[xNN, xMT[xNN]], 
+      xEQ[xNN, xTB]]]]]]]
+Hold[xEQ[xNOT[xEQ[xNN, xNOT[xEQ[xNOT[xMS[xNN]], 
+      xNOT[xEQ[xEQ[xMS[xCS], xDU[xMS[xCS], xEQ[xEQ[xMS[xTB], 
+            xDU[xMS[xCS], xEQ[xMT[xCS], xNN]]], xNOT[xMS[xNN]]]]], 
+        xNOT[xMS[xTB]]]]]]]], 
+  xEQ[xEQ[xMS[xCS], xDU[xMS[xCS], 
+     xEQ[xEQ[xEQ[xMS[xTB], xDU[xMS[xNN], 
+         xEQ[xNOT[xEQ[xNN, xNOT[xEQ[xNN, xNOT[xMS[xNN]]]]]], xNN]]], 
+       xNOT[xMS[xNN]]], xNOT[xMS[xNN]]]]], xNOT[xMS[xTB]]]]]
+Hold[xEQ[xDU[xNOT[xMT[xCS]], xNOT[xNN]], xEQ[xDU[xMS[xNN], xNOT[xMS[xNN]]], 
+   xMS[xCS]]]]
+Hold[xEQ[xEQ[xMT[xNN], xDU[xMT[xCS], xNOT[xCS]]], xDU[xCS, xNOT[xMS[xNN]]]]]
+Hold[
+ xEQ[xDU[xEQ[xDU[xNOT[xTB], xDU[xEQ[xTB, xDU[xMS[xTB], 
+        xDU[xNN, xEQ[xNN, xMS[xNN]]]]], 
+      xEQ[xDU[xNOT[xEQ[xTB, xNOT[xEQ[xNN, xEQ[xMT[xCS], xMS[xNN]]]]]], 
+        xEQ[xNN, xNOT[xNN]]], xMS[xNN]]]], xEQ[xNN, xMS[xNN]]], 
+   xDU[xNN, xEQ[xDU[xDU[xNN, xEQ[xCS, xCS]], xDU[xNN, xNOT[xMT[xCS]]]], 
+     xDU[xTB, xNOT[xMS[xNN]]]]]], xMS[xNN]]]
+Hold[xEQ[xDU[xDU[xMS[xNN], xEQ[xMT[xNN], xNN]], 
+   xNOT[xEQ[xMT[xNN], xDU[xEQ[xMS[xNN], xNOT[xMS[xNN]]], 
+      xNOT[xDU[xMT[xCS], xEQ[xTB, xCS]]]]]]], xDU[xNOT[xNN], xNOT[xCS]]]]
+Hold[xEQ[xEQ[xDU[xMT[xCS], xMS[xTB]], xDU[xNOT[xDU[xNN, xEQ[xNN, xMS[xTB]]]], 
+    xNOT[xEQ[xDU[xNOT[xNN], xNOT[xMS[xNN]]], xCS]]]], xNOT[xMS[xNN]]]]
+Hold[xEQ[xDU[xNOT[xDU[xNN, xNOT[xMS[xCS]]]], 
+   xDU[xEQ[xDU[xCS, xEQ[xNN, xMT[xTB]]], xNOT[xNN]], 
+    xDU[xDU[xMS[xTB], xEQ[xNN, xCS]], 
+     xEQ[xNOT[xDU[xEQ[xDU[xCS, xEQ[xNN, xMT[xCS]]], xNOT[xNN]], 
+        xDU[xDU[xMS[xNN], xEQ[xNN, xCS]], xEQ[xNOT[xEQ[xNN, xMT[xNN]]], 
+          xTB]]]], xTB]]]], xEQ[xTB, xDU[xNOT[xMS[xNN]], xEQ[xNN, xTB]]]]]
+Hold[xEQ[xDU[xMT[xNN], xEQ[xEQ[xTB, xMT[xCS]], 
+    xDU[xMS[xNN], xNOT[xMS[xNN]]]]], xDU[xNOT[xMS[xNN]], 
+   xDU[xDU[xNOT[xNN], xNOT[xDU[xMS[xNN], xNOT[xCS]]]], xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xEQ[xDU[xTB, xNOT[xMT[xCS]]], 
+   xNOT[xEQ[xMS[xNN], xNOT[xDU[xMS[xNN], xNOT[xCS]]]]]], 
+  xDU[xEQ[xMS[xNN], xNOT[xEQ[xMS[xNN], xNOT[xNN]]]], xEQ[xTB, xCS]]]]
+Hold[xEQ[xEQ[xMS[xCS], xTB], xDU[xNOT[xDU[xMT[xCS], xEQ[xTB, xCS]]], 
+   xDU[xNOT[xTB], xEQ[xCS, xMS[xNN]]]]]]
+Hold[xEQ[xDU[xNOT[xTB], xEQ[xMS[xNN], xEQ[xDU[xCS, xNOT[xMT[xCS]]], 
+     xMT[xTB]]]], xDU[xTB, xDU[xMT[xNN], xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xMT[xNN], xDU[xNN, xDU[xNOT[xNN], 
+    xEQ[xEQ[xMS[xNN], xDU[xNN, xDU[xNOT[xEQ[xMS[xTB], 
+          xEQ[xDU[xTB, xNOT[xMT[xCS]]], xNOT[xCS]]]], xEQ[xEQ[xMS[xNN], xCS], 
+         xNN]]]], xNN]]]]]
+Hold[xEQ[xNOT[xDU[xMT[xCS], xEQ[xNOT[xMS[xTB]], xNOT[xNOT[xMS[xTB]]]]]], 
+  xDU[xMT[xTB], xEQ[xCS, xDU[xCS, xNOT[xMS[xNN]]]]]]]
+Hold[xEQ[xEQ[xEQ[xCS, xTB], xDU[xNOT[xMT[xNN]], 
+    xDU[xMT[xCS], xEQ[xTB, xCS]]]], xDU[xMS[xNN], xEQ[xNN, xEQ[xCS, xTB]]]]]
+Hold[xEQ[xMS[xCS], xDU[xDU[xNN, xNOT[xMS[xNN]]], xDU[xMT[xCS], xNOT[xNN]]]]]
+Hold[xEQ[xEQ[xDU[xMT[xCS], xNOT[xCS]], xMS[xNN]], 
+  xDU[xMT[xNN], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xDU[xMS[xCS], xEQ[xNOT[xMT[xNN]], xDU[xMS[xCS], xNOT[xMT[xCS]]]]], 
+  xEQ[xMS[xCS], xDU[xMS[xCS], xNOT[xDU[xMT[xCS], xMS[xNN]]]]]]]
+Hold[xEQ[xMS[xTB], 
+  xDU[xEQ[xDU[xEQ[xTB, xDU[xNOT[xNOT[xEQ[xDU[xTB, xEQ[xMS[xNN], xNN]], 
+          xMT[xCS]]]], xNOT[xMT[xCS]]]], xNOT[xNN]], xNN], 
+   xNOT[xDU[xNOT[xEQ[xCS, xCS]], xDU[xDU[xMS[xNN], xNOT[xCS]], 
+      xNOT[xMS[xNN]]]]]]]]
+Hold[xEQ[xEQ[xEQ[xDU[xTB, xNOT[xMT[xCS]]], xNN], xMS[xNN]], 
+  xDU[xEQ[xNN, xMS[xNN]], xEQ[xNN, xEQ[xCS, xNN]]]]]
+Hold[xEQ[xCS, xDU[xEQ[xMT[xNN], 
+    xDU[xDU[xMT[xCS], xEQ[xNN, xDU[xMS[xCS], xEQ[xMT[xTB], xTB]]]], 
+     xDU[xDU[xDU[xCS, xEQ[xMT[xNN], xEQ[xTB, xTB]]], 
+       xEQ[xCS, xNOT[xMS[xNN]]]], xNOT[xNOT[xMT[xCS]]]]]], 
+   xDU[xMS[xNN], xEQ[xCS, xMS[xNN]]]]]]
+Hold[xEQ[xDU[xMS[xNN], xEQ[xMT[xTB], 
+    xEQ[xDU[xDU[xNN, xDU[xMS[xNN], xNOT[xMS[xNN]]]], xMS[xNN]], 
+     xDU[xMS[xNN], xEQ[xDU[xMS[xNN], xMT[xCS]], 
+       xEQ[xDU[xNN, xDU[xMS[xNN], xDU[xCS, xDU[xMS[xNN], xNOT[xMS[xNN]]]]]], 
+        xMS[xNN]]]]]]], xMS[xCS]]]
+Hold[xEQ[xDU[xDU[xMT[xCS], xMT[xNN]], xEQ[xMT[xCS], xMS[xCS]]], 
+  xDU[xMT[xNN], xNOT[xMS[xNN]]]]]
+Hold[xEQ[xDU[xEQ[xEQ[xTB, xNN], xCS], xDU[xNOT[xMS[xNN]], 
+    xDU[xCS, xDU[xMT[xCS], xEQ[xMT[xNN], xCS]]]]], 
+  xDU[xDU[xMT[xNN], xDU[xCS, xNOT[xMS[xNN]]]], xDU[xCS, xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xDU[xMT[xCS], xNOT[xNN]], xNOT[xDU[xTB, xNOT[xMS[xNN]]]]]]
+Hold[xEQ[xDU[xMT[xCS], xNOT[xDU[xNOT[xNN], xNOT[xMT[xTB]]]]], 
+  xDU[xCS, xNOT[xDU[xMS[xNN], xDU[xMS[xNN], xEQ[xDU[xMS[xNN], xNOT[xNN]], 
+       xNN]]]]]]]
+Hold[xEQ[xDU[xCS, xNOT[xMT[xCS]]], xDU[xEQ[xNOT[xEQ[xMT[xNN], xTB]], 
+    xMS[xTB]], xEQ[xCS, xDU[xMS[xNN], xNOT[xMS[xNN]]]]]]]
+Hold[xEQ[xMS[xNN], xDU[xDU[xMT[xCS], xNOT[xNN]], 
+   xNOT[xDU[xNOT[xMT[xNN]], xNOT[xMS[xNN]]]]]]]
+Hold[xEQ[xCS, xEQ[xMT[xNN], 
+   xEQ[xEQ[xDU[xNOT[xMS[xNN]], xEQ[xMT[xNN], xMT[xCS]]], 
+     xDU[xMS[xNN], xEQ[xMS[xNN], xMT[xNN]]]], xNOT[xTB]]]]]

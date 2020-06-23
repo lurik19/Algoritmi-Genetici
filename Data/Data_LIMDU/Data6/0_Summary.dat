@@ -1,0 +1,7 @@
+Parola desiderata:	{u, n, i, v, e, r, s, a, l, e}
+Npop =	100
+Ngen =	150
+pc =	0.7
+pm =	0.1
+MaxDepthInd =	6
+MaxCountDU =	150
