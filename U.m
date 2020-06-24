@@ -5,15 +5,16 @@ Npop = 100; (* numero individui *)
 Ngen = 150; (* numero di generazioni *)
 pc = 0.7; (* probabilità di avere crossover *)
 pm = 0.1; (* probabilità di avere una mutazione *)
+MaxDepthInd = 1000;
+MaxCountDU = 15 * Length[goal];
+
+(* Pesi dei diversi criteri della fitness *)
+PatGen = 500;
+IndiceStack = 500;
+IndiciStacks = 2000;
 
 (* Parola desiderata *)
 goal = {u, n, i, v, e, r, s, a, l, e};
-
-MaxDepthInd = 8;
-MaxCountDU = 15 * Length[goal];
-
-(* Nome cartella in cui salvare i dati *)
-FolderPath = "Data"<>ToString[MaxDepthInd]<>"/"
 
 (********************** OPERAZIONI **********************)
 
@@ -167,7 +168,7 @@ Individuo[ind_] := Module[{Pos, pos, com, i, individuo},
 			(* Peschiamo un comando casuale tra quelli sintatticamente compatibili *)
 			individuo[[Sequence @@ Pos[[i]]]] = com[[Random[Integer, {1, Length[com]}]]],
 			
-			{i, Length[Pos]}		
+			{i, Length[Pos]}
 		];
 	];
 
@@ -189,7 +190,7 @@ Popolazione[num_] := Table[Individuo[ii], {i, num}];
 EseguiIndividuo[individuo_] := Module[{result},
 
 	contapassiDUtot = 0;
-	
+
 	result = individuo /. {xCS->Hold[CS], xTB->Hold[TB], xNN->Hold[NN], xNOT->NOT, xMT->MT, xMS->MS, xEQ->EQ, xDU->DU};
 	result = Map[ReleaseHold, result, {0, Infinity}]
 	
@@ -210,7 +211,7 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 
 		(* Lista delle posizioni di tutti i comandi nel primo individuo *)
 		temp1 = Flatten[Table[Position[ind1, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
-		temp1 = DeleteCases[ temp1, {1}]; (* Non può pescare tutto l'individuo (magari toglierò questo comando) *)
+		temp1 = DeleteCases[ temp1, {1}]; (* Non può pescare tutto l'individuo *)
 		
 		(* Variabile booleana che mi dice se è possibile effettuare il crossover o meno *)
 		crossoverOK = False;
@@ -243,9 +244,9 @@ Crossover[coppia_] := Module[{ind1, ind2, temp1, crossoverOK, Rand, Pos1, swap, 
 			(* Butto via i pezzi di programma non compatibili *)
 			temp = Flatten[Table[Position[ind2, tutto[[i]]], {i,1,Length[tutto]}], 1] /. {x___,0} -> {x};
 			
-			temp = DeleteCases[ temp, {1}]; (* Non può pescare tutto l'individuo (magari toglierò questo comando)*)
+			temp = DeleteCases[ temp, {1}]; (* Non può pescare tutto l'individuo *)
 			
-			togliHead = Flatten[Table[Position[ind2, blacklistHead[[i]]], {i,1,Length[blacklistHead]}], 1] /. {x___,0}->{x};
+			togliHead = Flatten[Table[Position[ind2, blacklistHead[[i]]], {i, 1, Length[blacklistHead]}], 1] /. {x___,0}->{x};
 			temp = DeleteCases[ temp, Alternatives @@ togliHead]; 
 			
 			(* E ora butto via i pezzi di programma non compatibili con swap (i comandi a cui non posso dare swap come input) *)
@@ -324,7 +325,7 @@ Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff, tstart,
 
 	Headz = Map[Head, Level[individuo, Infinity]];
 	(* Premio la varietà del patrimonio genetico degli individui *)
-	fitnesstot = 500 * Length[Union[Headz]] * Length[stacks];
+	fitnesstot = PatGen * Length[Union[Headz]] * Length[stacks];
 
 	If[ Depth[individuo] <= MaxDepthInd && trovato === 0,
 		(* Se l'individuo è molto complesso (= grande Depth) gli do una fitness bassa,
@@ -344,13 +345,13 @@ Fitness[individuo_] := Module[{Headz, fitnesstot, index, indextot, diff, tstart,
 		indextot = Plus @@ index;
 		
 		(* Conto quante lettere giuste ho nelle varie stack *)
-		fitnesstot += 500 * indextot;
+		fitnesstot += IndiceStack * indextot;
 		
 		(* In questo modo faccio sì che i programmi che costruiscono più stack contemporaneamente 
 		   alla stessa velocità vengano premiate più di quelle che costruiscono completamente una 
 		   sola stack specifica! *)
 		diff = Max[index] - Min[index];
-		fitnesstot += 2000 * indextot / (diff + 1);
+		fitnesstot += IndiciStacks * indextot / (diff + 1);
 		
 		(* Se trovo il programma ideale lo salvo e poi esco dalla run! *)
 		If[ indextot === Length[stacks] * Length[goal],
@@ -380,7 +381,7 @@ suddivido[voti_, criterio_] := Module[{temp},
 	Which[ criterio === FitnessProportionate,
 		totalevoti = Plus @@ voti;
 		frazioni = voti/totalevoti;
-		suddivisione = Table[Sum[frazioni[[j]], {j,1,i}] , {i,1,Npop}], 
+		suddivisione = Table[Sum[frazioni[[j]], {j, 1, i}], {i, 1, Npop}],		
 		True, (* caso di default *)
 		Print["criterio non definito"]; Abort[]
 
@@ -397,13 +398,13 @@ generazione[popolazione_] := Module[{r, tstart},
 	votipop = voti[popolazione];
 	
 	tstart = AbsoluteTime[];
-	
+    
 	intervallo = suddivido[votipop, FitnessProportionate];
 	genitori = Table[
 			r = Random[];
-			indice = Count[intervallo, x_ /; x<r] + 1; 
+			indice = Count[intervallo, x_ /; x<r] + 1;
 			popolazione[[indice]],
-			{i,1,Npop}
+			{i, 1, Npop}
 		];
 
 	figli = ricombina[genitori];
@@ -423,7 +424,7 @@ run := Module[{itry, tstart},
 	(* Genero una nuova popolazione ogni volta che lancio run *)
 	pop = Popolazione[Npop]; 
 	
-	Do[		
+	Do[
 		fitnessmax = 0;
 		pop = generazione[pop];
 		AppendTo[fitnessMaxAndMean, {N[Mean[votipop]], N[fitnessmax]}];
@@ -432,23 +433,23 @@ run := Module[{itry, tstart},
 			gentrovato = igen;
 			Print["Individuo trovato alla generazione ", igen, " con fitness = ", fitnesstrovato];
 			
-		tstart = AbsoluteTime[];
-		numtry = 100;
-		Print["\n"];
-		Print["Provo la soluzione su ", numtry, " stack"];
-		countbad = 0;
-		Do[
-			Try;
-			If[Indice[stack, goal] != Length[goal],
-				countbad++;
-			],
+			tstart = AbsoluteTime[];
+			numtry = 100;
+			Print["\n"];
+			Print["Provo la soluzione su ", numtry, " stack"];
+			countbad = 0;
+			Do[
+				Try;
+				If[Indice[stack, goal] != Length[goal],
+					countbad++;
+				],
+				
+				{itry, numtry}
+			];
+			Print["Numero di stack su cui la soluzione ha funzionato: ", numtry - countbad];
+			timez[[5]] += AbsoluteTime[] - tstart;
 			
-			{itry, numtry}
-		];
-		Print["Numero di stack su cui la soluzione ha funzionato: ", numtry - countbad];
-		timez[[5]] += AbsoluteTime[] - tstart;
-		
-		Break[];
+			Break[];
 		],
 		
 		{igen, Ngen}
@@ -462,7 +463,10 @@ run := Module[{itry, tstart},
 ];
 
 
-runs[numruns_] := Module[{countgood, gengood, tstart},
+runs[nrun_] := Module[{countgood, gengood, tstart},
+
+	(* Nome cartella in cui salvare i dati *)
+	FolderPath = "Data"<>ToString[MaxDepthInd]<>ToString[PatGen]<>ToString[IndiceStack]<>ToString[IndiciStacks]<>"/";
 
 	(* Creo la cartella in cui salvare i dati (se non esiste già) *)
 	Switch[ FileType[FolderPath],
@@ -480,10 +484,9 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 	gengood = {};
 	times = {};
 	soluzioni = {};
-	
 	NonTrovati = 0;
 	
-	timez = Table[0, {7}];
+	timez = Table[0, {5}];
 	
 	Do[
 		Print["--------------------------- Run ", irun ," ---------------------------"];
@@ -491,7 +494,7 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 		run;
 		time = AbsoluteTime[] - tstart;
 		timez[[1]] += time;
-				
+		
 		Print[time, " secondi"];
 		Print["\n"];
 
@@ -511,15 +514,15 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 		PutAppend[N[time], FolderPath<>"times.dat"];
 		AppendTo[times, time],
 	
-		{irun, numruns}
+		{irun, nrun}
 	];
 	
-	If[ numruns > 1,
-	Print["Generazioni = ", N[Mean[gengood]], "+-", N[StandardDeviation[gengood]]];
-	Print["Stack ricostruite = ", N[Mean[countgood]], "+-", N[StandardDeviation[countgood]]],
+	If[ nrun > 1,
+		Print["Generazioni = ", N[Mean[gengood]], "+-", N[StandardDeviation[gengood]]];
+		Print["Stack ricostruite = ", N[Mean[countgood]], "+-", N[StandardDeviation[countgood]]],
 	
-	Print["Generazioni = ", N[Mean[gengood]]];
-	Print["Stack ricostruite = ", N[Mean[countgood]]];
+		Print["Generazioni = ", N[Mean[gengood]]];
+		Print["Stack ricostruite = ", N[Mean[countgood]]];
 	
 	];
 	
@@ -527,7 +530,7 @@ runs[numruns_] := Module[{countgood, gengood, tstart},
 	Print["Tempo medio per run = ", N[Mean[times]]];
 	
 	Print[" \n--------------- Profiling ---------------"];
-	timez /= numruns;
+	timez /= nrun;
 	Print["Tempo medio per run = ", timez[[1]]];
 	Print["Tempo medio Fitness per run = ", timez[[2]]];
 	Print["Tempo medio per il resto della riproduzione per run = ", timez[[3]]];
